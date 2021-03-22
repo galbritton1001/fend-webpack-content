@@ -1,20 +1,51 @@
-async function handleSubmit(event) {
-    event.preventDefault()
-        const myurl = `https://api.meaningcloud.com/sentiment-2.1?key=f450e24343025f4e5ce1aa0c97f6cd1d&of=json&txt=Main%20dishes%20were%20quite%20good%2C%20but%20desserts%20were%20too%20sweet%20for%20me.&model=general&lang=en`;
-        //get weather data from api
-        const response = await fetch(myurl);
-        try {
-          //const myweather = await response.json();
-          //const ztemp = myweather.main.temp;
-          //const zdate = dateTimeStamp();
-          //const ztext = document.getElementById("feelings").value;
-          //const mydata = { ztemp, zdate, ztext };
-          //sendToServer(mydata);
-        } catch (error) {
-          console.log("error", error);
-        }
-      
+async function retrieveData(urlTxt) {
+  //const one = `https://www.bbc.com/future/article/20210309-why-some-people-can-deal-with-the-cold?utm_source=pocket-newtab`;
+  const one = urlTxt;
+  const two = "blah blah";
+  const three = "pickle time";
+  const meme = { one, two, three };
+  const postOpts = {
+    method: "post",
+    body: JSON.stringify(meme),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    console.log(postOpts);
+
+    const myResponse = await fetch("/myApiReq", postOpts);
+    const json = await myResponse.json();
+    console.log(json);
+    const myText = document.getElementById("apiResult");
+    console.log(JSON.stringify(json));
+    myText.value = JSON.stringify(json);
+    +alert(`API call succsessful`);
+  } catch (error) {
+    console.log("error", error);
+    alert(`API call fail ${error}`);
+  }
 }
 
+function handleSubmit(event) {
+  event.preventDefault();
+  console.log("check url put into the form field");
 
-export { handleSubmit }
+  let urlText = document.getElementById("urlName").value;
+  const inputData = [urlText, false];
+  console.log(
+    "@@@@@@@@@@@@@@@@@@@@@@  Botton clcik to call namechecker  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+  );
+  if (Client.checkForName(inputData)) {
+    console.log(
+      "@@@@@@@@@@@@@@@@@@@@@@  calling API  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    );
+    retrieveData(urlText);
+  } else {
+    alert(`API call canceled`);
+  }
+}
+
+export { handleSubmit, retrieveData };

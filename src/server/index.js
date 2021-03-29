@@ -43,28 +43,45 @@ app.get("/test", function (req, res) {
   res.json(mockAPIResponse);
 });
 
-app.post("/myApiReq", async (request, response) => {
-  console.log(request.body.one);
-  console.log(request.body.two);
-  console.log(request.body.three);
-  const myKey = process.env.API_KEY;
-  const myTestUrl = request.body.one;
-  if (myTestUrl === "https://www.google.com") {
-    response.json(mockAPIResponse);
-  } else {
-    //const myTestUrl = 'https://www.bbc.com/future/article/20210309-why-some-people-can-deal-with-the-cold?utm_source=pocket-newtab'
-    //console.log(myUrlIn);
-    console.log(`api key = ${myKey}`);
-    //const myurl = `https://api.meaningcloud.com/sentiment-2.1?key=f450e24343025f4e5ce1aa0c97f6cd1d&of=json&txt=Main%20dishes%20were%20quite%20good%2C%20but%20desserts%20were%20too%20sweet%20for%20me.&model=general&lang=en`;
-    //const myurl = `https://api.meaningcloud.com/sentiment-2.1?key=${myKey}&of=json&txt=Main%20dishes%20were%20quite%20good%2C%20but%20desserts%20were%20too%20sweet%20for%20me.&model=general&lang=en`;
-    const myurl = `https://api.meaningcloud.com/sentiment-2.1?key=${myKey}&of=json&url=${myTestUrl}&model=general&lang=en`;
+app.post("/getPics", async (req, res) => {
+  const myCity = req.body.one;
+  const myKey = process.env.pixaBay_API_KEY;
+  const myurl =`https://pixabay.com/api/?key=${myKey}&q=${myCity}&image_type=photo`;
+  try{
     const myResp = await fetch(myurl);
-    const json = await myResp.json();
-    response.json(json);
-  }
+    const myPics = await myResp.json(); 
+    console.log(myPics);
+    res.json(myPics);
+  }catch {console.log("error ",error);}
 });
 
-console.log(`Your API key is ${process.env.API_KEY}`);
+app.post("/getWeather", async (req, res) => {
+  console.log(req.body);
+  const myLatLon = req.body.two.split(":");
+  const myKey = process.env.weatherBit_API_KEY;
+  const myurl =`https://api.weatherbit.io/v2.0/current?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}`;
+  console.log(myurl);
+  try{
+    const myResp = await fetch(myurl);
+    const weatherRec = await myResp.json();
+    console.log(weatherRec)
+    res.json(weatherRec);
+  }catch  {console.log("Error",error);}
+});
+
+app.post("/getGeo", async (req, res) => {
+  const myKey = process.env.geoName_API_KEY;
+  const myCity = req.body.one;
+  const myurl = `http://api.geonames.org/searchJSON?q=${myCity}&maxRows=10&username=${myKey}`;
+  try {
+    const myResp = await fetch(myurl);
+    const myGeoname = await myResp.json();
+    console.log(myGeoname);
+    res.json(myGeoname);
+  }catch{console.log("@@@@ error @@@@ ",error);}
+
+});
+
 // designates what port the app will listen to for incoming requests
 app.listen(8080, function () {
   console.log("Example app listening on port 8080!");

@@ -3,43 +3,46 @@
     <head>
         <meta charset="utf-8">
         <title>Test</title>
-        <link rel="stylesheet" href="client/styles/resets.css">
-        <link rel="stylesheet" href="client/styles/base.css">
-        <link rel="stylesheet" href="client/styles/header.css">
-        <link rel="stylesheet" href="client/styles/form.css">
-        <link rel="stylesheet" href="client/styles/footer.css">
+
+        
     </head>
 
     <body>
-
-        <header>
-            <div class="">
-                Logo
+        <div id="page-container">
+            <div id="header-container">
+                <header>
+                    <h1 id="header-main">NLP Demo Project</h1>
+                </header>
             </div>
-            <div class="">
-                navigation
+            <div id="main-container">
+                <main>
+                    <section>
+                        <form class="" onsubmit="return Client.handleSubmit(event)">
+                            <input id="urlName" type="text" name="input" value="" placeholder="Enter URL Here">
+                            <input id="urlSubmit" type="submit" name="" value="submit" onclick="return Client.handleSubmit(event)" onsubmit="return handleSubmit(event)">
+                        </form>
+                    <section>
+
+                    <section>
+                        <strong>Form Results:</strong>
+                        <textarea id="apiResult"></textarea>
+                    </section>
+                </main>
             </div>
-        </header>
-
-        <main>
-            <section>
-                <form class="" onsubmit="return Client.handleSubmit(event)">
-                    <input id="name" type="text" name="input" value="" placeholder="Name">
-                    <input type="submit" name="" value="submit" onclick="return Client.handleSubmit(event)" onsubmit="return handleSubmit(event)">
-                    <button id="mybutt" onclick = "retrieveData()">push me</button>
-                </form>
-            <section>
-
-            <section>
-                <strong>Form Results:</strong>
-                <div id="results"></div>
-            </section>
-            
-        </main>
-
-        <footer>
-            <p>This is a footer</p>
-        </footer>
-
+            <div id="footer-container">
+                <footer>
+                    <p>This is a footer</p>
+                </footer>
+            </div>
+        </div>
+        <script>
+            // Check that service workers are supported
+         //   if ('serviceWorker' in navigator) {
+                // Use the window load event to keep the page load performant
+         //       window.addEventListener('load', () => {
+         //           navigator.serviceWorker.register('/service-worker.js');
+         //       });
+         //   }
+        </script>
     </body>
 </html>

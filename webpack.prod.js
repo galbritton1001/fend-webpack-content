@@ -5,6 +5,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebPackPlugin = require('copy-webpack-plugin');
 
 
 
@@ -41,7 +42,17 @@ module.exports = {
             filename: "./index.html"
         }),
 
+        new CopyWebPackPlugin({
+            patterns: [
+              { from: path.resolve(__dirname, "src/images"),
+                
+                 to: path.resolve(__dirname, "dist/images")
+              }],
+          }),
+
         new MiniCssExtractPlugin({ filename: "[name].css" }),
+
+        
         
         new CleanWebpackPlugin({
             // Simulate the removal of files

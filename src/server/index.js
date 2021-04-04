@@ -59,7 +59,8 @@ app.post("/getWeather", async (req, res) => {
   console.log(req.body);
   const myLatLon = req.body.two.split(":");
   const myKey = process.env.weatherBit_API_KEY;
-  const myurl =`https://api.weatherbit.io/v2.0/current?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}`;
+  //const myurl =`https://api.weatherbit.io/v2.0/current?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}`;
+  const myurl =`https://api.weatherbit.io/v2.0/forecast/hourly?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}&hours=48&units=[i]`;
   console.log(myurl);
   try{
     const myResp = await fetch(myurl);

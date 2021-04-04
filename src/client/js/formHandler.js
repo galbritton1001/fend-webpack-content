@@ -1,15 +1,24 @@
 let slideIndex = 1;
 
+let mainImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
+
+AddSlides(mainImgList);
+
 showSlides(slideIndex);
 
             // show prev/next slide
 function changeSlide(n) {
+  //event.preventDefault();
   showSlides(slideIndex += n);
+  console.log(`changing to ${slideIndex}`);
 }
 
             // show current slide
 function currentSlide(n) {
+  //event.preventDefault();
   showSlides(slideIndex = n);
+  console.log(`changing to ${slideIndex}`);
+  
 }
 
 function showSlides(n) {
@@ -25,7 +34,9 @@ function showSlides(n) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
   slides[slideIndex-1].style.display = "block";
+  console.log(`activating slide ${slideIndex-1}`);
   dots[slideIndex-1].className += " active";
+  console.log(`activating dot ${slideIndex-1}`);
 } 
 
 
@@ -37,14 +48,11 @@ function AddSlides(slideList) {
     mySlideElem.removeChild(mySlideElem.firstChild);}
   while (myDotElem.firstChild) {
     myDotElem.removeChild(myDotElem.firstChild);}
-  for(a=0; a < slideList.length; a++) {
+  for(a=1; a <= slideList.length; a++) {
 
     // create dot element  
     let dotElem = document.createElement("span");
-    //dotElem.onclick=`return Client.currentSlide(${a})`;
-    addEventListener("click", function() {
-      return Client.currentSlide(`${a}`);
-    });
+    dotElem.setAttribute("onclick",`return Client.currentSlide(${a});`);
     dotElem.classList.add("dot");
 
     // create an image holder
@@ -58,12 +66,12 @@ function AddSlides(slideList) {
     console.log("Create image index text holder");
     let x = document.createElement("div");
     x.classList.add("numbertext");
-    x.innerHTML = `${a} of ${slideList.length-1}`;
+    x.innerHTML = `${a} of ${slideList.length}`;
 
     //create image 
     console.log("creating image");
     let y = document.createElement("img");
-    y.src = slideList[a];
+    y.src = slideList[a-1];
     console.log("creating text div");
 
     // create caption text holder
@@ -84,15 +92,13 @@ function AddSlides(slideList) {
   }
   let myPrev = document.createElement("a");
   let myNext = document.createElement("a");
-  //myPrev.onclick="return Client.changeSlide(-1)";
-  addEventListener("click", function() {
-    return Client.changeSlide(-1);
-  });
+  
   myPrev.innerHTML="&#10094;";
-  myNext.onclick="return Client.changeSlide(1)";
-  addEventListener("click", function() {
-    return Client.changeSlide(1);
-  });
+  myPrev.classList.add('prev');
+  myPrev.setAttribute("onclick","return Client.changeSlide(-1);");
+  
+  myNext.classList.add('next');
+  myNext.setAttribute("onclick","return Client.changeSlide(1);");
   myNext.innerHTML="&#10095;";
   mySlideElem.appendChild(myPrev);
   mySlideElem.appendChild(myNext);
@@ -100,12 +106,44 @@ function AddSlides(slideList) {
   showSlides(slideIndex);
 }
 
+function popUlDest(json) {
+
+  let x=document.getElementById("destList");
+  while (x.firstChild) {
+    x.removeChild(x.firstChild);
+  }
+  let a=0;
+  let str="";
+  let lst=json.geonames;
+  for (a=0; a < json.geonames.length; a++) {
+    console.log("My City name list item "+a);
+    console.log(lst[a]);
+    str=`${lst[a].name} ${lst[a].adminName1} ${lst[a].countryCode} Lat: ${lst[a].lat} Lon: ${lst[a].lng}`;
+    console.log("my String ="+str);
+    let y=document.createElement("li");
+    y.id="dest"+a;
+    y.innerHTML=str;
+    console.log(y);
+    x.appendChild(y);
+  }
+}
+
+function popPics(json) {
+  mainImgList=[];
+  let a = 0;
+  let pic = json.hits;
+  for (a=0; a < pic.length; a++) {
+    mainImgList.push(pic[a].webformatURL);
+  }
+  AddSlides(mainImgList);
+}
+
 
 async function retrieveData(urlTxt) {
   //const one = `https://www.bbc.com/future/article/20210309-why-some-people-can-deal-with-the-cold?utm_source=pocket-newtab`;
   //const one = urlTxt;
-  let one ="Paris";
-  let two = "48.85341:2.3488";
+  let one =document.getElementById("cityField").value;
+  let two = "";
   let three = "";
   let meme = { one, two, three };
   let postOpts = {
@@ -124,7 +162,9 @@ async function retrieveData(urlTxt) {
     let imgList =["./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
     console.log(json);
     console.log(JSON.stringify(json));
+    if (json.geonames === []) {throw `API returned no city data for ${one}`;}
     two = `${json.geonames[1].lat}:${json.geonames[1].lng}`;
+    popUlDest(json);
     meme = {one,two,three};
     postOpts = {
       method: "post",
@@ -143,13 +183,16 @@ async function retrieveData(urlTxt) {
     json = await myResponse.json();
     console.log(json);
     console.log(JSON.stringify(json));
+    popPics(json);
     
    // myText.value = JSON.stringify(json);
-    +alert(`API call succsessful`);
-    AddSlides(imgList);
+    alert(`API call succsessful`);
+
+    
   } catch (error) {
     console.log("error", error);
     alert(`API call fail ${error}`);
+    Client.setMenuPage(3);
   }
 }
 

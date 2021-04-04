@@ -12,37 +12,48 @@
     "bt";
   border: 4px ridge #c931c9;
   height: 98vh;
-  width: 99%;
+  width: 98vw;
+  background-color: #cccccc;
+  background-image:  linear-gradient(rgb(187, 255, 0), rgb(0, 255, 13));
 }
+
+ 
 
 #top-section {
   grid-area: tp;
   width: inherit;
-  height: 200px;
+  height: inherit;
   border: 3px solid #c931c9;
   display: flex;
   justify-content: center;
 }
 
+   
+
 #middle-section {
     grid-area: md;
-    width: inherit;
-    height: inherit;
+    /*width: 100%;
+    height: 100%;*/
     display: grid;
     grid-template-columns: 0.35fr 1fr 0.35fr;
-    grid-template-rows: auto;
-    grid-template-areas: "lf ct rt";
+    grid-template-rows: 1f 1f 1f 1f;
+    grid-template-areas: "ulf ct urt"
+                         "ulf ct urt"
+                         "llf ct lrt"
+                         "llf ct lrt";
     font-size: 10pt;
   }
 
 #midMid-section {
     grid-area: ct;
-    width: inherit;
-    height: inherit;
+    /*width: 100%;
+    height: 100%;*/
     justify-content: left;
     position: relative;
     display: grid;
     margin: 5px;
+    background-color: #cccccc;
+    background-image: radial-gradient(red, yellow);
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas:
@@ -50,63 +61,71 @@
       "mlw mlw";
 }
 
-#midMidUr-section {
+#midMidUR-section {
     grid-area: mur;
     width: inherit;
-    height: inherit;
+    min-height: inherit;
+    max-height: 400px;
     justify-content: left;
-    background-color: rgb(243, 187, 113);
-  }
+    border: groove 6px burlywood;
+}
   
-  #midMidUl-section {
+#midMidUl-section {
     grid-area: mul;
     width: inherit;
-    height: inherit;
-    justify-content: left;
-    background-color: rgb(243, 187, 113);
-  }
+    min-height: inherit;
+    max-height: 400px;
+    display: flex;
+    justify-content: center;
+    border: groove 6px burlywood;
+}
   
-  #midMidLw-Section {
+#midMidLw-section {
     grid-area: mlw;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2em max-content;
+    grid-template-areas: "lwrup"
+                         "lwrdn";
     width: inherit;
-    height: inherit;
-    justify-content: left;
-    background-color: rgb(97, 68, 31);
-  }
-
-#midLeft-section {
-  grid-area: lf;
-  width: inherit;
-  height: inherit;
-  position: relative;
-  margin: 5px;
-  border: 3px solid #c931c9;
-  display: flex;
-  justify-content: left;
-  background-color: burlywood;
+    min-height: inherit;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    border: groove 6px burlywood;
+    
 }
 
+#midLeft-section {
+  grid-area: ulf;
+  width: inherit;
+  height: inherit;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+}
 
 #midRight-section {
-    grid-area: rt;
+    grid-area: urt;
     width: inherit;
     height: inherit;
     border: 3px solid #c931c9;
     justify-content: left;
-    position: relative;
     margin: 5px;
+    margin-right: 10px;
     display: flex;
     justify-content: left;
     background-color: rgb(221, 172, 221);
 }
 
-
+#weather-container {
+  margin-right: 10px;
+}
 
 #bottom-section {
   grid-area: bt;
   width: inherit;
   height: inherit;
-  position: relative;
   margin: 5px;
   border: 3px ridgsolid #c931c9;
   display: flex;
@@ -117,3 +136,272 @@
 #dot-container {
   text-align:center;
 }
+
+#infomation-container {
+
+  
+
+}
+
+#toDoInput-container {
+  grid-area: lwrup;
+  width: 100%;
+  height: inherit;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}
+
+#inputToDo {
+  height: 1.5em;
+  font-size: 8pt;
+  position:absolute;
+  left: 1.9%;
+  bottom: 44%;
+  display: none;
+
+}
+
+#toDo-container {
+  grid-area: lwrdn;
+  width: 100%;
+  height: 200px;
+  font-size: 10pt;
+  font-family: "ALucida Console", Helvetica, sans-serif;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  //display: inline-block;
+  display: none;
+  justify-content: left;
+}
+
+#toDoList {
+  //display: none;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+// Top Header
+h1 {
+  text-justify: center;
+  position: absolute;
+  font-size: 20pt;
+  font-style:italic;
+  font-weight: bold;
+  color: rgb(238, 228, 228);
+}
+
+li {
+  padding: 10px 0px 0px 10px;
+}
+
+li:hover {
+ color: white;
+}
+
+button {
+  height: 1.5em;
+}
+
+#submitButton1 {
+  position: absolute;
+  bottom: 53%;
+  right: 53%;
+}
+// add ToDo list button 
+#newToDo {
+  position: absolute;
+  bottom: 53%;
+  right: 53%;
+}
+//Delete ToDo List item button
+#delToDoItem {
+  position: absolute;
+  bottom: 37.5%;
+  left: 1.9%;
+  font-size: 8pt;
+  height: 1.5em;
+}
+// Exit Edit Mode button
+#exitEditMode {
+  position: absolute;
+  bottom: 37.5%;
+  left: 13%;
+  font-size: 8pt;
+  height: 1.5em;
+}
+  
+.button {
+  display: inline-block;
+  font-size: 16px;
+  height: 2em;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #2dd7ee;
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  box-shadow: 0 5px 11px #186f7a;
+}
+
+.button:hover { background-color: #0ab5cc;};
+
+.button:active {
+  background-color: #0ab5cc;;
+    box-shadow: 0 5px 7px #186f7a;
+    transform: translateY(4px);
+  } 
+
+.infodata {
+  margin: 3px;
+  border-radius: 20px;
+  
+}
+
+  @media screen and (max-width:1100px) {
+        //Delete ToDo List item button
+#delToDoItem {
+  position: absolute;
+  bottom: 37.5%;
+  left: 1.9%;
+  font-size: 7pt;
+  height: 1.5em;
+}
+// Exit Edit Mode button
+#exitEditMode {
+  position: absolute;
+  bottom: 37.5%;
+  left: 23.3%;
+  font-size: 7pt;
+  height: 1.5em;
+}
+
+  }
+
+  @media screen and (max-width:980px) {
+    .button {
+      font-size: 10px;
+      height: 1.5em;
+    }
+
+
+
+    h1 {
+
+      font-size: 14pt;
+    }  
+
+    .dot {
+      height: 8px;
+      width: 8px;
+    }  
+    .numbertext {
+      font-size: 8px;
+    }
+    #middle-section {
+      font-size: 7pt;
+    }
+
+    .infoData {
+      font-size: 6px;
+    }
+  }
+
+  
+
+  @media screen and (max-width: 700px) {
+    #middle-section {
+        grid-area: md;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1f 1fr 1fr 1fr;
+        grid-template-areas: "ctop"
+                             "ct"
+                             "ct"
+                             "cbot"
+                             "clw";
+        font-size: 10pt;
+      }
+    
+    #midMidUR-section {
+        grid-area: mur;
+        width: inherit;
+        min-height: inherit;
+        max-height: 400px;
+       
+        justify-content: left;
+        border: groove 6px burlywood;
+    }
+      
+    #midMidUl-section {
+        grid-area: mul;
+        width: inherit;
+        min-height: inherit;
+        max-height: 400px;
+        display: flex;
+        
+        justify-content: center;
+        border: groove 6px burlywood;
+    }
+      
+    #midMidLw-section {
+        grid-area: mlw;
+        width: inherit;
+        min-height: inherit;
+        max-height: 400px;
+        display: flex;
+        justify-content: center;
+        border: groove 6px burlywood;
+        
+    }
+    
+    #midLeft-section {
+      grid-area: ctop;
+      width: 96.9%;
+      height: 93%;
+      margin: 5px;
+      border: 3px solid #c931c9;
+      display: flex;
+      flex-direction: row;
+      justify-content: right;
+      background-color: burlywood;
+    }
+    
+    #midRight-section {
+        grid-area: cbot;
+        width: 96.5%;
+        height: inherit;
+        border: 3px solid #c931c9;
+        justify-content: left;
+        margin: 5px;
+        margin-right: 10px;
+        display: flex;
+        justify-content: left;
+        background-color: rgb(221, 172, 221);
+    }
+    //Delete ToDo List item button
+#delToDoItem {
+  position: absolute;
+  bottom: 37.5%;
+  left: 1.9%;
+  font-size: 6pt;
+  height: 1.5em;
+}
+// Exit Edit Mode button
+#exitEditMode {
+  position: absolute;
+  bottom: 37.5%;
+  left: 26.3%;
+  font-size: 6pt;
+  height: 1.5em;
+}
+  }

@@ -6,6 +6,9 @@ AddSlides(mainImgList);
 
 showSlides(slideIndex);
 
+
+// @@@@@@@@@@@@ Slide Show Functions @@@@@@@@@@@@@@@@
+
             // show prev/next slide
 function changeSlide(n) {
   //event.preventDefault();
@@ -13,13 +16,15 @@ function changeSlide(n) {
   console.log(`changing to ${slideIndex}`);
 }
 
-            // show current slide
+            // select current slide
 function currentSlide(n) {
   //event.preventDefault();
   showSlides(slideIndex = n);
   console.log(`changing to ${slideIndex}`);
   
 }
+
+// Display selected Slide
 
 function showSlides(n) {
   let i =0;
@@ -39,7 +44,7 @@ function showSlides(n) {
   console.log(`activating dot ${slideIndex-1}`);
 } 
 
-
+// add slides to slide container and dots to dot container
 function AddSlides(slideList) {
   let a= 0;
   const mySlideElem = document.getElementById("slideList");
@@ -84,30 +89,33 @@ function AddSlides(slideList) {
     slideDiv.appendChild(x);
     slideDiv.appendChild(y);
     slideDiv.appendChild(z);
-
     console.log("adding image container to slideshow container");
     mySlideElem.appendChild(slideDiv);
     console.log("adding dot element to dot container");
     myDotElem.appendChild(dotElem);
   }
+  // adding next and prev arrows
   let myPrev = document.createElement("a");
   let myNext = document.createElement("a");
-  
   myPrev.innerHTML="&#10094;";
   myPrev.classList.add('prev');
   myPrev.setAttribute("onclick","return Client.changeSlide(-1);");
-  
   myNext.classList.add('next');
   myNext.setAttribute("onclick","return Client.changeSlide(1);");
   myNext.innerHTML="&#10095;";
   mySlideElem.appendChild(myPrev);
   mySlideElem.appendChild(myNext);
+
+  // set slide index and display 1st slide
   slideIndex = 1;
   showSlides(slideIndex);
 }
 
-function popUlDest(json) {
+//@@@@@@@@@@@@@@ end slide show functions @@@@@@@@@@@@@@@@@@
 
+
+// create an city list from API call
+function popUlDest(json) {
   let x=document.getElementById("destList");
   while (x.firstChild) {
     x.removeChild(x.firstChild);
@@ -128,6 +136,7 @@ function popUlDest(json) {
   }
 }
 
+// create an image list from API call
 function popPics(json) {
   mainImgList=[];
   let a = 0;
@@ -138,10 +147,8 @@ function popPics(json) {
   AddSlides(mainImgList);
 }
 
-
+// call API for city weather and pictures
 async function retrieveData(urlTxt) {
-  //const one = `https://www.bbc.com/future/article/20210309-why-some-people-can-deal-with-the-cold?utm_source=pocket-newtab`;
-  //const one = urlTxt;
   let one =document.getElementById("cityField").value;
   let two = "";
   let three = "";
@@ -157,14 +164,14 @@ async function retrieveData(urlTxt) {
 
   try {
     console.log(postOpts);
-    let myResponse = await fetch("/getGeo", postOpts); // get Geonames
+    let myResponse = await fetch("/getGeo", postOpts); // get Geonames call
     let json = await myResponse.json();
     let imgList =["./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
     console.log(json);
     console.log(JSON.stringify(json));
     if (json.geonames === []) {throw `API returned no city data for ${one}`;}
     two = `${json.geonames[1].lat}:${json.geonames[1].lng}`;
-    popUlDest(json);
+    popUlDest(json); // send to list populater
     meme = {one,two,three};
     postOpts = {
       method: "post",
@@ -179,16 +186,12 @@ async function retrieveData(urlTxt) {
     json = await myResponse.json();
     console.log(json);
     console.log(JSON.stringify(json));
-    myResponse = await fetch("/getPics", postOpts);
+    myResponse = await fetch("/getPics", postOpts);  // get city pics from Pixabay
     json = await myResponse.json();
     console.log(json);
     console.log(JSON.stringify(json));
-    popPics(json);
-    
-   // myText.value = JSON.stringify(json);
+    popPics(json); // send to picture list builder
     alert(`API call succsessful`);
-
-    
   } catch (error) {
     console.log("error", error);
     alert(`API call fail ${error}`);

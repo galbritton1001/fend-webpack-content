@@ -1,12 +1,27 @@
 
 function setMenuPage(pageIndex) {
-  console.log("fuck fuck fuck")
   let i=0;
   let slides = document.getElementsByClassName("menuPage");
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
   slides[pageIndex].style.display = "block";
+}
+
+function openWeather(event, pageIndex) {
+  let i=0;
+  let myTabs = document.getElementsByClassName("tabPage");
+  let myTabBtn = document.getElementsByClassName("tabButton");
+  for (i=0; i < myTabs.length; i++) {
+    myTabs[i].style.display = "none";
+    //myTabBtn[i].setAttribute("background-color", "rgb(221, 172, 221)");
+    myTabBtn[i].className = myTabBtn[i].className.replace(" active", "");
+  }
+  myTabs[pageIndex].style.display = "block";
+  //myTabBtn[pageIndex].setAttribute("background-color", "rgb(221, 172, 221)");
+  //event.currentTarget.className += " active";
+  myTabBtn[pageIndex].className += " active";
+
 }
 
 function isBtnOn(showBtn) {
@@ -169,4 +184,4 @@ function checkForName(inputData) {
     return false;
   }
 }
-export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList };
+export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather };

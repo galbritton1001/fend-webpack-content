@@ -119,7 +119,7 @@
 }
 
 #weather-container {
-  margin-right: 10px;
+  width: 100%;
 }
 
 #bottom-section {
@@ -183,6 +183,13 @@ img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+
+#topimg {
+  //width:100%;
+  //height: 100%;
+  object-fit: cover;
+}
+
 }
 // Top Header
 h1 {
@@ -232,6 +239,37 @@ button {
   left: 13%;
   font-size: 8pt;
   height: 1.5em;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  margin: 0px 0px 0px 0px;
+  width:100%;
+  background-color: rgb(90, 12, 90);
+}
+
+.tabButton {
+  display: inline-block;
+  border: 2px solid rgb(170, 92, 170);
+  font-size: 8pt;
+  height: 1.5em;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: rgb(90, 12, 90);
+  border: none;
+}
+
+.tabButton:hover {
+  background-color: rgb(221, 172, 221);
+}
+
+.tabButton.active {
+  background-color: rgb(221, 172, 221);
 }
   
 .button {
@@ -291,7 +329,7 @@ button {
       height: 1.5em;
     }
 
-
+    .tabButton { font-size: 6pt}
 
     h1 {
 

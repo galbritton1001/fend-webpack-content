@@ -10,7 +10,7 @@
             <div id="main-container">
                 <main>
                     <div id="top-section">
-                        <img src="./images/img4.jpg" style="width:100%; height: 100%;object-fit: cover;">
+                        <img id="topimg" src="./images/img4.jpg" >
                         <h1>Travel Planner</h1>
                     </div>
                     <div id="middle-section">
@@ -95,7 +95,22 @@
                         </div>
                         <div id="midRight-section">
                             <div id="weather-container">
-
+                                <div class="tabs">
+                                    <button class="tabButton" onclick="return Client.openWeather(event, 0)">Current</button>
+                                    <button class="tabButton" onclick="return Client.openWeather(event, 1)">3-Day</button>
+                                    <button class="tabButton" onclick="return Client.openWeather(event, 2)">Historical</button>
+                                </div>
+                                <div id="tabPage-container" >
+                                    <div id="tabPage0"class="tabPage"style="display: none">
+                                        <p>Current Weather</p>
+                                    </div>
+                                    <div id="tabPage1"class="tabPage"style="display: none">
+                                        <p>3 Day forcast</p>
+                                    </div>
+                                    <div id="tabPage2"class="tabPage"style="display: none">
+                                        <p>Historical for this date</p>
+                                    </div>
+                                </div>    
                             </div>
                         </div>
                     </div>     

@@ -7,6 +7,8 @@ const fetch = require("node-fetch");
 //var bodyParser = require("body-parser");
 //var cors = require("cors");
 
+var mySave = {};
+
 var json = {
   title: "test json response",
   message: "this is a message",
@@ -55,12 +57,40 @@ app.post("/getPics", async (req, res) => {
   }catch {console.log("error ",error);}
 });
 
-app.post("/getWeather", async (req, res) => {
+app.post("/getWeatherCurrent", async (req, res) => {
   console.log(req.body);
   const myLatLon = req.body.two.split(":");
   const myKey = process.env.weatherBit_API_KEY;
-  //const myurl =`https://api.weatherbit.io/v2.0/current?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}`;
-  const myurl =`https://api.weatherbit.io/v2.0/forecast/hourly?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}&hours=48&units=[i]`;
+  const myurl =`https://api.weatherbit.io/v2.0/current?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}&units=i`;
+  console.log(myurl);
+  try{
+    const myResp = await fetch(myurl);
+    const weatherRec = await myResp.json();
+    console.log(weatherRec)
+    res.json(weatherRec);
+  }catch  {console.log("Error",error);}
+});
+
+app.post("/getWeather3day", async (req, res) => {
+  console.log(req.body);
+  const myLatLon = req.body.two.split(":");
+  const myKey = process.env.weatherBit_API_KEY;
+  const myurl =`https://api.weatherbit.io/v2.0/forecast/daily?lat=${myLatLon[0]}&lon=${myLatLon[1]}&key=${myKey}&hours=72&units=i`;
+  console.log(myurl);
+  try{
+    const myResp = await fetch(myurl);
+    const weatherRec = await myResp.json();
+    console.log(weatherRec)
+    res.json(weatherRec);
+  }catch  {console.log("Error",error);}
+});
+
+app.post("/getWeatherHist", async (req, res) => {
+  console.log(req.body);
+  const myLatLon = req.body.two.split(":");
+  const myDate = req.body.three.split(":");
+  const myKey = process.env.weatherBit_API_KEY;
+  const myurl =`https://api.weatherbit.io/v2.0/history/daily?lat=${myLatLon[0]}&lon=${myLatLon[1]}&start_date=${myDate[0]}&end_date=${myDate[1]}&key=${myKey}&units=i`;
   console.log(myurl);
   try{
     const myResp = await fetch(myurl);

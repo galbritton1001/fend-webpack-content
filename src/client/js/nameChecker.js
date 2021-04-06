@@ -5,26 +5,27 @@ function setMenuPage(pageIndex) {
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
+  if (pageIndex===0) {
+    let x=document.getElementById("dateField");
+    x.value = new Date();
+  }
   slides[pageIndex].style.display = "block";
 }
 
-function openWeather(event, pageIndex) {
+function openWeather(event, pageIndex) { // opens clicked weather page tab button
   let i=0;
   let myTabs = document.getElementsByClassName("tabPage");
   let myTabBtn = document.getElementsByClassName("tabButton");
   for (i=0; i < myTabs.length; i++) {
     myTabs[i].style.display = "none";
-    //myTabBtn[i].setAttribute("background-color", "rgb(221, 172, 221)");
     myTabBtn[i].className = myTabBtn[i].className.replace(" active", "");
   }
   myTabs[pageIndex].style.display = "block";
-  //myTabBtn[pageIndex].setAttribute("background-color", "rgb(221, 172, 221)");
-  //event.currentTarget.className += " active";
   myTabBtn[pageIndex].className += " active";
 
 }
 
-function isBtnOn(showBtn) {
+function isBtnOn(showBtn) {   // turn on/turn off ToDo list edit buttons
   let a=document.getElementById("delToDoItem");
   let b=document.getElementById("exitEditMode");
   if (showBtn) {
@@ -39,7 +40,7 @@ function isBtnOn(showBtn) {
   }
 }
 
-function exitEdit(event){
+function exitEdit(event){  // exit ToDo edit mode
   isBtnOn(false);
   console.log("Leaving Edit mode");
   let d=document.getElementById("inputToDo")
@@ -48,7 +49,7 @@ function exitEdit(event){
 }
 
 
-function delToDoItem(event) {
+function delToDoItem(event) {  // Delete ToDo item from list
   console.log("Deleting Todo list item");
   let d=document.getElementById("inputToDo").name;
   let a=d.slice(0,d.indexOf("L"));
@@ -65,7 +66,7 @@ function delToDoItem(event) {
   exitEdit(event);
 }
 
-function setEdit(myindx) {
+function setEdit(myindx) {  // turn on ToDo edit when label is clicked
   console.log(`my index = `);
   console.log(myindx);
   let y = document.getElementById("inputToDo");
@@ -82,7 +83,8 @@ function setEdit(myindx) {
 }
 
 function createToDo(event) {
-  // check if input has name of checkbox label
+  // return key pressed in todo input
+  // check if input has name of checkbox label 
   // true enables edit mode save or false will create new
   // list item
   let d = document.getElementById("inputToDo");

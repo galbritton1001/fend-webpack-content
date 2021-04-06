@@ -136,6 +136,18 @@ function popUlDest(json) {
   }
 }
 
+function currentWeather(json) {
+  y=document.createElement("p");
+  y.innerHTML
+
+}
+
+function extendedWeather(json) {
+
+}
+
+
+
 // create an image list from API call
 function popPics(json) {
   mainImgList=[];
@@ -150,8 +162,31 @@ function popPics(json) {
 // call API for city weather and pictures
 async function retrieveData(urlTxt) {
   let one =document.getElementById("cityField").value;
+  console.log(document.getElementById("cityField").value);
   let two = "";
-  let three = "";
+  let myDate = new Date(document.getElementById("dateField").value);
+  console.log(myDate);
+  var d = Date.parse(myDate);
+  let myNextDay = new Date(document.getElementById("dateField").value);
+  let h=myDate.getTimezoneOffset()*60000;  //compensate for UTC timezone
+  console.log(d);
+  console.log(h);
+  myDate.setTime(d+h);  // add current millisec and offset millisec to correct date
+  myNextDay.setTime(d+h+86400000); // add 1 day
+  console.log(myDate);
+  console.log(myNextDay);
+  let a= myNextDay.getFullYear();
+  let b= 1+myNextDay.getMonth();
+  let c= myNextDay.getDate();
+  let x= myDate.getFullYear();
+  let y= 1+myDate.getMonth();
+  let z= myDate.getDate();
+  if (y < 10) {y="0"+y;}
+  if (z < 10) {z="0"+z;}
+  if (b < 10) {b="0"+b;}
+  if (c < 10) {c="0"+c;}
+  let three = `${x}-${y}-${z}:${a}-${b}-${c}`;
+  console.log(three);
   let meme = { one, two, three };
   let postOpts = {
     method: "post",
@@ -182,10 +217,21 @@ async function retrieveData(urlTxt) {
       },
     };
     console.log(postOpts);
-    myResponse = await fetch("/getWeather", postOpts); // get weather based on lat lon from Geoname
+    myResponse = await fetch("/getWeatherCurrent", postOpts); // get current weather based on lat lon from Geoname
     json = await myResponse.json();
     console.log(json);
     console.log(JSON.stringify(json));
+    currentWeather(json);
+    myResponse = await fetch("/getWeather3day", postOpts); // get 3day weather based on lat lon from Geoname
+    json = await myResponse.json();
+    console.log(json);
+    console.log(JSON.stringify(json));
+    extendedWeather(json);
+    myResponse = await fetch("/getWeatherHist", postOpts); // get historical weather based on lat lon from Geoname
+    json = await myResponse.json();
+    console.log(json);
+    console.log(JSON.stringify(json));
+    historicalWeather(json);
     myResponse = await fetch("/getPics", postOpts);  // get city pics from Pixabay
     json = await myResponse.json();
     console.log(json);

@@ -1,8 +1,12 @@
+import { setMidLower } from "./nameChecker.js";
+
 let slideIndex = 1;
 
-let mainImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
+let mainImgList = [];
 
-AddSlides(mainImgList);
+let defaultImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
+
+AddSlides(defaultImgList);
 
 showSlides(slideIndex);
 
@@ -11,14 +15,12 @@ showSlides(slideIndex);
 
             // show prev/next slide
 function changeSlide(n) {
-  //event.preventDefault();
   showSlides(slideIndex += n);
   console.log(`changing to ${slideIndex}`);
 }
 
             // select current slide
 function currentSlide(n) {
-  //event.preventDefault();
   showSlides(slideIndex = n);
   console.log(`changing to ${slideIndex}`);
   
@@ -26,17 +28,17 @@ function currentSlide(n) {
 
 // Display selected Slide
 
-function showSlides(n) {
-  let i =0;
+function showSlides(a) {
+  let b =0;
   let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1;}
-  if (n < 1) {slideIndex = slides.length;}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
+  if (a > slides.length) {slideIndex = 1;}
+  if (a < 1) {slideIndex = slides.length;}
+  for (b = 0; b < slides.length; b++) {
+    slides[b].style.display = "none";
   }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
+  let dots = document.getElementsByClassName("dot");
+  for (b = 0; b < dots.length; b++) {
+    dots[b].className = dots[b].className.replace(" active", "");
   }
   slides[slideIndex-1].style.display = "block";
   console.log(`activating slide ${slideIndex-1}`);
@@ -47,6 +49,7 @@ function showSlides(n) {
 // add slides to slide container and dots to dot container
 function AddSlides(slideList) {
   let a= 0;
+  console.log("Made it to addSlides")
   const mySlideElem = document.getElementById("slideList");
   const myDotElem = document.getElementById("dot-container");
   while (mySlideElem.firstChild) {
@@ -126,27 +129,102 @@ function popUlDest(json) {
   for (a=0; a < json.geonames.length; a++) {
     console.log("My City name list item "+a);
     console.log(lst[a]);
-    str=`${lst[a].name} ${lst[a].adminName1} ${lst[a].countryCode} Lat: ${lst[a].lat} Lon: ${lst[a].lng}`;
+    str=`${lst[a].name}: ${lst[a].adminName1}: ${lst[a].countryCode}: Lat: ${lst[a].lat}: Lon: ${lst[a].lng}`;
     console.log("my String ="+str);
     let y=document.createElement("li");
     y.id="dest"+a;
     y.innerHTML=str;
     console.log(y);
     x.appendChild(y);
+    setMidLower(true,1);
   }
 }
 
 function currentWeather(json) {
+  let x=document.getElementById("currForcast");
+  let y=document.createElement("p");
+  y.innerHTML=`Current Temp: ${json.data[0].temp}`;
+  x.appendChild(y);
+  y=document.createElement("br");
+  x.appendChild(y);
   y=document.createElement("p");
-  y.innerHTML
+  y.innerHTML=`Feels Like: ${json.data[0].app_temp}`;
+  x.appendChild(y);
+  y=document.createElement("br");
+  x.appendChild(y);
+  y=document.createElement("p");
+  y.innerHTML=`Current Conditions ${json.data[0].weather.description}`;
+  x.appendChild(y);
+  y=document.createElement("br");
+  x.appendChild(y);
+  y=document.createElement("p");
+  y.innerHTML=`Winds out of the ${json.data[0].wind_cdir} gusting to ${json.data[0].wind_spd}`;
+  x.appendChild(y);
+  y=document.createElement("br");
+  x.appendChild(y);
+  y=document.createElement("p");
+  y.innerHTML=`Precipitation ${json.data[0].precip}`;
+  x.appendChild(y);
+  
+
 
 }
 
 function extendedWeather(json) {
-
+  let x=document.getElementById("extForcast");
+  let a=0;
+  for (a=0; a<16; a++) {
+    let y=document.createElement("p");
+    y.innerHTML=`High Temp: ${json.data[a].high_temp} Degree`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Low Temp: ${json.data[a].low_temp} Degree`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Conditions ${json.data[a].weather.description}`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Winds out of the ${json.data[a].wind_cdir} gusting to ${json.data[a].wind_gust_spd} mph`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Precipitation ${json.data[a].precip}`;
+    x.appendChild(y);
+  }
 }
 
-
+function historicalWeather(json) {
+  let x=document.getElementById("histForcast");
+  let a=0;
+  for (a=0; a < json.data.length; a++) {
+    let y=document.createElement("p");
+    y.innerHTML=`High Temp: ${json.data[a].max_temp} Degree`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Low Temp: ${json.data[a].min_temp} Degree`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Winds speed ${json.data[a].wind_spd} gusting to ${json.data[a].wind_gust_spd} mph`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Precipitation ${json.data[a].precip}`;
+    x.appendChild(y);
+  }
+  
+}
 
 // create an image list from API call
 function popPics(json) {
@@ -159,11 +237,7 @@ function popPics(json) {
   AddSlides(mainImgList);
 }
 
-// call API for city weather and pictures
-async function retrieveData(urlTxt) {
-  let one =document.getElementById("cityField").value;
-  console.log(document.getElementById("cityField").value);
-  let two = "";
+function getDates() {
   let myDate = new Date(document.getElementById("dateField").value);
   console.log(myDate);
   var d = Date.parse(myDate);
@@ -185,7 +259,15 @@ async function retrieveData(urlTxt) {
   if (z < 10) {z="0"+z;}
   if (b < 10) {b="0"+b;}
   if (c < 10) {c="0"+c;}
-  let three = `${x}-${y}-${z}:${a}-${b}-${c}`;
+  return `${x}-${y}-${z}:${a}-${b}-${c}`;
+}
+
+// call API for city weather and pictures
+async function retrieveData(urlTxt) {
+  let one =document.getElementById("cityField").value;
+  console.log(document.getElementById("cityField").value);
+  let two = "";
+  let three = getDates();
   console.log(three);
   let meme = { one, two, three };
   let postOpts = {
@@ -201,7 +283,6 @@ async function retrieveData(urlTxt) {
     console.log(postOpts);
     let myResponse = await fetch("/getGeo", postOpts); // get Geonames call
     let json = await myResponse.json();
-    let imgList =["./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
     console.log(json);
     console.log(JSON.stringify(json));
     if (json.geonames === []) {throw `API returned no city data for ${one}`;}
@@ -237,11 +318,20 @@ async function retrieveData(urlTxt) {
     console.log(json);
     console.log(JSON.stringify(json));
     popPics(json); // send to picture list builder
+    Client.setMidUpperLeft(true,3);
+    Client.setRightState(true);
+    Client.setMidUpperRight(true);
     alert(`API call succsessful`);
   } catch (error) {
     console.log("error", error);
     alert(`API call fail ${error}`);
+    //############# remove this section is for testing only###############
     Client.setMenuPage(3);
+    Client.setMidUpperLeft(true,3);
+    Client.setRightState(true);
+    Client.setMidUpperRight(true);
+
+    ///############end test section ############
   }
 }
 

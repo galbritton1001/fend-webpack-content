@@ -1,18 +1,156 @@
+import { AddSlides } from "./formHandler.js";
 
-function setMenuPage(pageIndex) {
-  let i=0;
-  let slides = document.getElementsByClassName("menuPage");
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
+let defaultImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
+
+function setMidLow(pageIndx) { // show menu page for mid lower menu
+  let a=document.getElementsByClassName("midLowerMenu");
+  let b=0;
+  for (b=0; b < a.length; b++) {
+    a[b].style.display="none";
   }
-  if (pageIndex===0) {
-    let x=document.getElementById("dateField");
-    x.value = new Date();
-  }
-  slides[pageIndex].style.display = "block";
+  a[pageIndx].style.display="block";
 }
 
-function openWeather(event, pageIndex) { // opens clicked weather page tab button
+function setMidUpLft(pageIndx) { // show menu page for mid upper menu
+  let a=document.getElementsByClassName("menuPage");
+  let b=0;
+  for (b=0; b < a.length; b++) {
+    a[b].style.display="none";
+  }
+  a[pageIndx].style.display="block";
+}
+
+
+function setMidUpperLeft(myState,myPage) { // set display set for mid upper left
+  let x= document.getElementById("midMidUl-section");
+  if (myState) {
+    setMidUpLft(myPage);
+    x.style.display="block";
+  }
+  else{
+    x.style.display="none";
+  }
+
+}
+
+function setRightState(myState) {  // set display state for right
+  let x=document.getElementById("midRight-section");
+  if (myState) {
+    x.style.display="flex";
+  }
+  else{
+    x.style.display="none";
+  }
+}
+
+function setMidUpperRight(myState) {
+  let x=document.getElementById("midMidUR-section");
+  if (myState) {
+    x.style.display="block";
+  }
+  else{
+    x.style.display="none";
+  }  
+}
+
+function setMidLower(myState,myPage) { // set display state for mid lower
+  let x= document.getElementById("midMidLw-section");
+  if (myState) {
+    setMidLow(myPage);
+    x.style.display="block";
+  }
+  else{
+    x.style.display="none";
+  }
+}
+
+// Clear weather tabs
+function clearWeather(){
+  let x=document.getElementById("currForcast");
+  while (x.firstChild) {
+    x.removeChild(x.firstChild);}
+  x=document.getElementById("extForcast");
+  while (x.firstChild) {
+    x.removeChild(x.firstChild);}
+  x=document.getElementById("histForcast");
+    while (x.firstChild) {
+      x.removeChild(x.firstChild);}     
+}
+  // load the default image list into slideshow
+  function defaultImageList() {
+    AddSlides(defaultImgList);
+  }
+
+  function clearInputFields() {
+    let x=document.getElementById("cityField");
+    x.value = "";
+    x=document.getElementById("stateField");
+    x.value = "";
+    x=document.getElementById("countryField");
+    x.value = "";
+  }
+
+  function clearDestList() {
+    let x=document.getElementById("destList");
+    while (x.firstChild) {
+      x.removeChild(x.firstChild);}
+  }
+
+  function clearToDoList() {
+   let x=document.getElementById("inputToDo");
+    x.setAttribute("display","none");
+    x.name="";
+    x.value="";
+    x=document.getElementById("toDoList");
+    while (x.firstChild) {
+      x.removeChild(x.firstChild);}
+    setMidLow(0);
+  }
+
+
+
+//sets display page states and data entry 
+function setMenu(menuIndex) { 
+  if (menuIndex===0) { // clear mid-section 
+  clearDestList(); 
+  isBtnOn(false);
+  clearToDoList();
+  clearWeather();
+  defaultImageList();
+  clearInputFields();
+  setMidUpperRight(false);
+  setRightState(false);
+  setMidLower(false,0);
+  }
+  else
+  if (menuIndex==1){ //display toDo multiple items note should only need toDo container come back and fix
+    x=document.getElementById("toDo-container");
+    x.setAttribute("style","display: block");
+    x=document.getElementById("toDoInput-container");
+    x.setAttribute("style","display: inline-block");
+    x=document.getElementById("inputToDo");
+    x.setAttribute("style","display: block");
+  }
+}
+
+//
+function setMenuPage(pageIndex) {
+  //let i=0;
+  setMenu(0);
+  setMidUpperLeft(true,pageIndex);
+  //let slides = document.getElementsByClassName("menuPage");
+  //for (i = 0; i < slides.length; i++) {
+  //  slides[i].style.display = "none";
+ // }
+ // if (pageIndex===0) {
+ //   let x=document.getElementById("dateField");
+ //   x.value = new Date();
+ // }
+ // slides[pageIndex].style.display = "block";
+}
+
+// Weather tab page controller
+function openWeather(event, pageIndex) { 
   let i=0;
   let myTabs = document.getElementsByClassName("tabPage");
   let myTabBtn = document.getElementsByClassName("tabButton");
@@ -22,8 +160,9 @@ function openWeather(event, pageIndex) { // opens clicked weather page tab butto
   }
   myTabs[pageIndex].style.display = "block";
   myTabBtn[pageIndex].className += " active";
-
 }
+
+
 
 function isBtnOn(showBtn) {   // turn on/turn off ToDo list edit buttons
   let a=document.getElementById("delToDoItem");
@@ -43,7 +182,11 @@ function isBtnOn(showBtn) {   // turn on/turn off ToDo list edit buttons
 function exitEdit(event){  // exit ToDo edit mode
   isBtnOn(false);
   console.log("Leaving Edit mode");
-  let d=document.getElementById("inputToDo")
+  let d=document.getElementById("inputToDo");
+  let a=d.name.slice(0,d.name.indexOf("L"));
+  if (!!document.getElementById(a)) {
+    document.getElementById(`${a}Label`).setAttribute("style", "color: none;");
+  }
   d.name="";
   d.value="";
 }
@@ -66,17 +209,43 @@ function delToDoItem(event) {  // Delete ToDo item from list
   exitEdit(event);
 }
 
-function setEdit(myindx) {  // turn on ToDo edit when label is clicked
+// label color reset and set click color
+function setColor(event,myElem,setClick) {
+  console.log("i came from");
+  console.log(event.target);
+  console.log(myElem.className); 
+ let x=document.getElementsByClassName(myElem.className);
+ console.log(x);
+ let a=0;
+ for (a=0; a < x.length; a++) {
+   console.log(x[a]);
+   x[a].setAttribute("style", "color: none;");
+ }
+ console.log("made it thru loop");
+ if (setClick) {
+  console.log(myElem.id);
+  x=document.getElementById(myElem.id);
+  x.setAttribute("style", "color: white;");
+ }
+}
+
+function setCitySearch(event,myElem) {
+ //setColor(event,myElem,true);
+ // check if city and state the same
+ 
+}
+
+function setEdit(event,myindx) {  // turn on ToDo edit when label is clicked
   console.log(`my index = `);
+  setColor(event, event.target, true);
   console.log(myindx);
   let y = document.getElementById("inputToDo");
   console.log(y);
   console.log(myindx.id);
   console.log(myindx.innerHTML);
-  myindx.setAttribute("style", "color: black;");
+  //myindx.setAttribute("style", "color: black;");
   y.name = myindx.id;
   y.value = myindx.innerHTML.trim();
-  // don't forget to enable edit buttons set here
   isBtnOn(true);
 
   
@@ -87,7 +256,9 @@ function createToDo(event) {
   // check if input has name of checkbox label 
   // true enables edit mode save or false will create new
   // list item
+  console.log("made it to createToDo");  // edit mode for toDo item
   let d = document.getElementById("inputToDo");
+
     if (d.name !== "") {
       let myName=d.name.split(":");
       let e=document.getElementById(myName[0]);
@@ -98,55 +269,59 @@ function createToDo(event) {
       isBtnOn(false);
       return;
     }
-  let a=document.getElementsByClassName("toDoCheck");
-  let b = document.getElementById("counterItem").innerHTML;
+    console.log("made it to createToDo not edit");  
+  let a=document.getElementsByClassName("toDoCheck");   // create new todo
+  let b = document.getElementById("counterItem").innerHTML; // get next item count
   let x=document.getElementById("toDoList");
-  let y=document.createElement("input");
-  y.setAttribute("type","checkbox");
+  let y=document.createElement("input");   // create a checkbox
+  y.setAttribute("type","checkbox");    
   y.id=`check${b}`;
   y.classList.add("toDoCheck");
   y.value =false;
   console.log(y);
   x.appendChild(y);
-  y=document.createElement("label");
+  y=document.createElement("label");   // create a label and assign to checkbox
   y.setAttribute("for",`check${b}`);
   y.id=`check${b}Label`;
   y.classList.add("checkBoxLabel");
   //y.innerHTML="    "+document.getElementById("inputToDo").value;
   y.innerHTML="    "+d.value;
   d.value="";
-  y.setAttribute("onclick",`return Client.setEdit(${y.id})`);
+  y.setAttribute("onclick",`return Client.setEdit(event,${y.id})`);  // create an event handler for label
   x.appendChild(y);
   y=document.createElement("br");
   y.id=`brcheck${b}`;
   x.appendChild(y);
   x=document.getElementById("toDo-container");
   x.scrollTop = 999999999;
-  b++;
+  b++;                                                  // inc and store next item count
   document.getElementById("counterItem").innerHTML = b;
 }
 
 function newList(event) {
-  console.log(" adding new list")
+  console.log(" adding new list");
+  exitEdit();
   let x=document.getElementById("counterItem");
   x.innerHTML="0";
-  x=document.getElementById("toDo-container");
-  x.setAttribute("style","display: block");
-  x=document.getElementById("toDoInput-container");
-  x.setAttribute("style","display: inline-block");
-  x=document.getElementById("inputToDo");
-  x.setAttribute("style","display: block");
+  setMidLow(2);
+  setMenu(1);
+  //x=document.getElementById("toDo-container");
+  //x.setAttribute("style","display: block");
+  //x=document.getElementById("toDoInput-container");
+  //x.setAttribute("style","display: inline-block");
+  //x=document.getElementById("inputToDo");
+  //x.setAttribute("style","display: block");
   const myItems = document.getElementById("toDoList");
   while (myItems.firstChild) {
     myItems.removeChild(myItems.firstChild);}
+    console.log("completed newlist");
 }
-
 
 function checkKey(event) {
   console.log(event.keyCode);
   console.log("i came from");
   console.log(event.target);
-  if (event.keyCode === 13) {
+  if (event.keyCode === 13) { 
     createToDo(event);
   }
 }
@@ -186,4 +361,5 @@ function checkForName(inputData) {
     return false;
   }
 }
-export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather };
+export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem };
+export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft };

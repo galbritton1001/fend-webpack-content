@@ -17,7 +17,11 @@
   background-image:  linear-gradient(rgb(187, 255, 0), rgb(0, 255, 13));
 }
 
- 
+.midLowerMenu.active {
+  display: block;
+} 
+
+
 
 #top-section {
   grid-area: tp;
@@ -68,6 +72,7 @@
     max-height: 400px;
     justify-content: left;
     border: groove 6px burlywood;
+    display: none;
 }
   
 #midMidUl-section {
@@ -76,7 +81,7 @@
     min-height: inherit;
     max-height: 400px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     border: groove 6px burlywood;
 }
   
@@ -93,6 +98,22 @@
     flex-direction: column;
     border: groove 6px burlywood;
     
+}
+
+.midLowerMenu {
+  display: none;
+}
+
+.midLowerMenu.active {
+  display: block;
+}
+
+#news-container {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  display: none;
+  max-height: 99%;
+  max-width: 99%;
 }
 
 #midLeft-section {
@@ -113,7 +134,7 @@
     justify-content: left;
     margin: 5px;
     margin-right: 10px;
-    display: flex;
+    display: none;
     justify-content: left;
     background-color: rgb(221, 172, 221);
 }
@@ -138,9 +159,21 @@
 }
 
 #infomation-container {
+  text-justify: left;
+  display: none;
+}
 
-  
+#about-container {
+  display: none;
+}
 
+#travelPage {
+  display: none;
+}
+
+#ul-container{
+  max-width: fit-content;
+  height: auto;
 }
 
 #toDoInput-container {
@@ -150,6 +183,8 @@
   display: flex;
   flex-direction: row;
   justify-content: left;
+  background: none;
+  display: none;
 }
 
 #inputToDo {
@@ -158,8 +193,12 @@
   position:absolute;
   left: 1.9%;
   bottom: 44%;
-  display: none;
+  /*display: none;*/
 
+}
+
+#counterItem {
+  display: none;
 }
 
 #toDo-container {
@@ -177,6 +216,10 @@
 
 #toDoList {
   //display: none;
+}
+
+#blankMid {
+  display: none;
 }
 
 img {
@@ -207,6 +250,28 @@ li {
 
 li:hover {
  color: white;
+}
+
+label {
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.checkBoxLabel {
+  cursor: pointer;
+  color: black;
+}
+
+.checkBoxLabel:hover {
+  color: white;
+}
+
+#destList {
+  margin: 5px 10px 5px 10px;
+  max-height: 300px;
+  width: auto;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
 }
 
 button {
@@ -252,15 +317,14 @@ button {
 
 .tabButton {
   display: inline-block;
-  border: 2px solid rgb(170, 92, 170);
-  font-size: 8pt;
-  height: 1.5em;
-  cursor: pointer;
   text-align: center;
-  text-decoration: none;
-  outline: none;
+  font-size: 8pt;
   color: #fff;
   background-color: rgb(90, 12, 90);
+  height: 1.5em;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
   border: none;
 }
 
@@ -300,7 +364,29 @@ button {
 .infodata {
   margin: 3px;
   border-radius: 20px;
+  margin-bottom: 10px;
   
+}
+
+//weather section
+
+#currForcast {
+  margin: 5px 10px 5px 10px;
+}
+
+
+#extForcast {
+  margin: 5px 10px 5px 10px;
+  max-height: 600px;
+  width: auto;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+#histForcast {
+  margin: 5px 10px 5px 10px;
+  height: auto;
+  width: auto;
 }
 
   @media screen and (max-width:1100px) {
@@ -335,6 +421,11 @@ button {
 
       font-size: 14pt;
     }  
+
+    label {
+      font-size: 8pt;
+      font-weight: bold;
+    }
 
     .dot {
       height: 8px;
@@ -386,8 +477,7 @@ button {
         min-height: inherit;
         max-height: 400px;
         display: flex;
-        
-        justify-content: center;
+        justify-content: left;
         border: groove 6px burlywood;
     }
       
@@ -427,19 +517,24 @@ button {
         background-color: rgb(221, 172, 221);
     }
     //Delete ToDo List item button
-#delToDoItem {
-  position: absolute;
-  bottom: 37.5%;
-  left: 1.9%;
-  font-size: 6pt;
-  height: 1.5em;
-}
-// Exit Edit Mode button
-#exitEditMode {
-  position: absolute;
-  bottom: 37.5%;
-  left: 26.3%;
-  font-size: 6pt;
-  height: 1.5em;
-}
+  #delToDoItem {
+    position: absolute;
+    bottom: 37.5%;
+    left: 1.9%;
+    font-size: 6pt;
+    height: 1.5em;
   }
+// Exit Edit Mode button
+  #exitEditMode {
+    position: absolute;
+    bottom: 37.5%;
+    left: 26.3%;
+    font-size: 6pt;
+    height: 1.5em;
+  }
+
+  label {
+    font-size: 7pt;
+    font-weight: bold;
+  }
+}

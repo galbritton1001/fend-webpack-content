@@ -1,5 +1,7 @@
 import { setMidLower } from "./nameChecker.js";
 
+let loopy =[];
+
 let slideIndex = 1;
 
 let mainImgList = [];
@@ -48,7 +50,7 @@ function showSlides(a) {
 
 // add slides to slide container and dots to dot container
 function AddSlides(slideList) {
-  let a= 0;
+
   console.log("Made it to addSlides")
   const mySlideElem = document.getElementById("slideList");
   const myDotElem = document.getElementById("dot-container");
@@ -56,13 +58,15 @@ function AddSlides(slideList) {
     mySlideElem.removeChild(mySlideElem.firstChild);}
   while (myDotElem.firstChild) {
     myDotElem.removeChild(myDotElem.firstChild);}
-  for(a=1; a <= slideList.length; a++) {
+  for(let a=1; a <= slideList.length; a++) {
 
     // create dot element  
     let dotElem = document.createElement("span");
-    dotElem.setAttribute("onclick",`return Client.currentSlide(${a});`);
     dotElem.classList.add("dot");
-
+    dotElem.id="dot"+a;
+    //dotElem.setAttribute("onclick",`return Client.currentSlide(${a});`);
+    dotElem.addEventListener("click", function () {currentSlide(a);});
+    loopy.push(a);
     // create an image holder
     console.log("creating image container")
     let slideDiv = document.createElement("div");
@@ -102,9 +106,11 @@ function AddSlides(slideList) {
   let myNext = document.createElement("a");
   myPrev.innerHTML="&#10094;";
   myPrev.classList.add('prev');
-  myPrev.setAttribute("onclick","return Client.changeSlide(-1);");
+  //myPrev.setAttribute("onclick","return Client.changeSlide(-1);");
+  myPrev.addEventListener("click", function () {changeSlide(-1);});
   myNext.classList.add('next');
-  myNext.setAttribute("onclick","return Client.changeSlide(1);");
+  //myNext.setAttribute("onclick","return Client.changeSlide(1);");
+  myNext.addEventListener("click", function () {changeSlide(1);});
   myNext.innerHTML="&#10095;";
   mySlideElem.appendChild(myPrev);
   mySlideElem.appendChild(myNext);
@@ -228,7 +234,7 @@ function historicalWeather(json) {
 
 // create an image list from API call
 function popPics(json) {
-  mainImgList=[];
+  mainImgList=[];  // need to add a check to keep default pics if no hits
   let a = 0;
   let pic = json.hits;
   for (a=0; a < pic.length; a++) {
@@ -330,6 +336,8 @@ async function retrieveData(urlTxt) {
     Client.setMidUpperLeft(true,3);
     Client.setRightState(true);
     Client.setMidUpperRight(true);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Calling Menu 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    Client.setMenu(2);
 
     ///############end test section ############
   }

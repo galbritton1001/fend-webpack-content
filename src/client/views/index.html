@@ -15,10 +15,10 @@
                     </div>
                     <div id="middle-section">
                         <div id="midLeft-section">
-                            <button id="PlannerBtn" class= "button" onclick = "return Client.setMenuPage(0)">Planner</button>
-                            <button id="newsBtn" class= "button" onclick = "return Client.setMenuPage(1)">News</button>
-                            <button id="aboutBtn" class= "button" onclick = "return Client.setMenuPage(2)">About</button>
-                            <button id="saveBtn" class= "button"></button> 
+                            <button id="homeBtn" class= "button">Home</button>
+                            <button id="PlannerBtn" class= "button">Planner</button>
+                            <button id="newsBtn" class= "button">News</button>
+                            <button id="aboutBtn" class= "button">About</button>
                             <button id="saveBtn1" class= "button"></button>
                             <button id="saveBtn2" class= "button"></button>
                             <button id="saveBtn3" class= "button"></button>
@@ -43,16 +43,16 @@
                                     <label>Destination City<br>
                                        <input type="text" id="cityField" class = "infoData" placeholder="City Name"></input><br><br>
                                     </label>
-                                    <label>State/Province<br>
+                                    <label for="stateField" id="stateLabel">State/Province<br>
                                         <input type="text" id="stateField" class = "infoData" placeholder="State/Province Name"list="stateList"></input><br><br>
                                     </label>
                                     <label for="countryField">Country<br>
-                                        <input type="text" id="countryField" class = "infoData" placeholder="Country Name"list="countryList"></input><br><br>
+                                        <input type="text" id="countryField" onchange = "return Client.isUs(event)" class = "infoData" placeholder="Country Name"list="countryList"></input><br><br>
                                     </label>
-                                    <lable for="dateField">Travel Date<br>
+                                    <label for="dateField">Travel Date<br>
                                         <input type="date"id="dateField" class = "infoData"></input><br><br>
-                                    </lable>
-                                    <button id="submitButton1"  onclick = "return Client.handleSubmit(event)" class="button">Submit</button>
+                                    </label>
+                                    <button id="submitButton1" class="button">Submit</button>
                                     <datalist id="countryList">
                                         <option value="Afghanistan">
                                             <option value="Albania">
@@ -317,8 +317,8 @@
                                     <h2>Travel Destination</h2><br>
 
 
-                                    
-                                    <button id="newToDo" class="button" onclick = "return Client.newList(event)">Add ToDo</button>
+                                    <button id="acceptBtn" class="button">Accept</button>
+                                    <button id="newToDo" class="button">Add ToDo</button>
 
                                 </div>
 
@@ -339,8 +339,8 @@
                                     <br>
                                     <br>
                                     <input id="inputToDo" type="text"  placeholder="Enter ToDo task" onkeypress ="return Client.checkKey(event)"style="display: none">
-                                    <button id="delToDoItem" onclick = "return Client.delToDoItem(event)" class="button"style="display: none">Delete Item</button> 
-                                    <button id="exitEditMode" onclick = "return Client.exitEdit(event)" class="button"style="display: none">Exit Edit</button>
+                                    <button id="delToDoItem" class="button"style="display: none">Delete Item</button> 
+                                    <button id="exitEditMode" class="button"style="display: none">Exit Edit</button>
                                 </div>
                                 <div id="toDo-container" class="midLowerMenu"> <!-- ToDo list container dynamically created-->
                                    <div id="toDoList">
@@ -352,9 +352,9 @@
                         <div id="midRight-section">  <!-- Weather container -->
                             <div id="weather-container">
                                 <div class="tabs"> <!-- weather tab buttons -->
-                                    <button class="tabButton" onclick="return Client.openWeather(event, 0)">Current</button>
-                                    <button class="tabButton" onclick="return Client.openWeather(event, 1)">3-Day</button>
-                                    <button class="tabButton" onclick="return Client.openWeather(event, 2)">Historical</button>
+                                    <button id="tb1" class="tabButton">Current</button>
+                                    <button id="tb2" class="tabButton">16-Day</button>
+                                    <button id="tb3" class="tabButton">Historical</button>
                                 </div>
                                 <div id="tabPage-container" >
                                     <div id="tabPage0"class="tabPage"style="display: none"><!-- Current Weather tabpage -->

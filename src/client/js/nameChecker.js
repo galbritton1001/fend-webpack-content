@@ -1,14 +1,36 @@
 import { AddSlides } from "./formHandler.js";
 
+window.onload = (event) => {
+  console.log("set initial window");
+  setMenu(0);
+  setMidUpperLeft(false,0);
+  document.getElementById("homeBtn").addEventListener("click", function() {return Client.setMenuPage(3);});
+  document.getElementById("PlannerBtn").addEventListener("click", function() {return Client.setMenuPage(0);});
+  document.getElementById("newsBtn").addEventListener("click", function() {return Client.setMenuPage(1);});
+  document.getElementById("aboutBtn").addEventListener("click", function() {return Client.setMenuPage(2);});
+  document.getElementById("submitButton1").addEventListener("click", function() {return Client.handleSubmit(event);});
+  document.getElementById("newToDo").addEventListener("click", function () {return Client.newList(event);});
+  document.getElementById("delToDoItem").addEventListener("click", function () {return Client.delToDoItem(event);});
+  document.getElementById("exitEditMode").addEventListener("click", function () {return Client.exitEdit(event);});
+  document.getElementById("tb1").addEventListener("click", function () {return Client.openWeather("0");});
+  document.getElementById("tb2").addEventListener("click", function () {return Client.openWeather("1");});
+  document.getElementById("tb3").addEventListener("click", function () {return Client.openWeather("2");});
+};
+
 let defaultImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
 
 function setMidLow(pageIndx) { // show menu page for mid lower menu
+  console.log("turning off menu pages")
   let a=document.getElementsByClassName("midLowerMenu");
   let b=0;
   for (b=0; b < a.length; b++) {
+    console.log("display off "+b);
+    console.log(a[b]);
     a[b].style.display="none";
   }
+  console.log("turning on selected Page"+pageIndx);
   a[pageIndx].style.display="block";
+  console.log("leaving setMidLow");
 }
 
 function setMidUpLft(pageIndx) { // show menu page for mid upper menu
@@ -54,14 +76,29 @@ function setMidUpperRight(myState) {
 }
 
 function setMidLower(myState,myPage) { // set display state for mid lower
+  console.log("turn on midMidLw-section");
   let x= document.getElementById("midMidLw-section");
   if (myState) {
     setMidLow(myPage);
     x.style.display="block";
+    console.log("leaving setMidLower");
   }
   else{
     x.style.display="none";
   }
+}
+
+function getToday(dateStyle) {
+  if (dateStyle==="short") {
+    let myDate = new Date();
+    let x= myDate.getFullYear();
+    let y= 1+myDate.getMonth();
+    let z= myDate.getDate();
+    if (y < 10) {y="0"+y;}
+    if (z < 10) {z="0"+z;}
+  return `${x}-${y}-${z}`;
+  }
+
 }
 
 // Clear weather tabs
@@ -79,6 +116,14 @@ function clearWeather(){
   // load the default image list into slideshow
   function defaultImageList() {
     AddSlides(defaultImgList);
+  }
+
+  function setInputFields(pageIndx) {
+    if (pageIndx===0) {
+     document.getElementById("stateField").disabled=true;
+     document.getElementById("stateLabel").style.color="grey";
+     document.getElementById("dateField").value = getToday("short");
+    }
   }
 
   function clearInputFields() {
@@ -111,7 +156,9 @@ function clearWeather(){
 
 //sets display page states and data entry 
 function setMenu(menuIndex) { 
+  console.log("set menu state "+menuIndex);
   if (menuIndex===0) { // clear mid-section 
+    console.log("executing menu 0"); 
   clearDestList(); 
   isBtnOn(false);
   clearToDoList();
@@ -121,15 +168,48 @@ function setMenu(menuIndex) {
   setMidUpperRight(false);
   setRightState(false);
   setMidLower(false,0);
+  setInputFields(0);
   }
-  else
-  if (menuIndex==1){ //display toDo multiple items note should only need toDo container come back and fix
-    x=document.getElementById("toDo-container");
-    x.setAttribute("style","display: block");
-    x=document.getElementById("toDoInput-container");
-    x.setAttribute("style","display: inline-block");
-    x=document.getElementById("inputToDo");
-    x.setAttribute("style","display: block");
+  else {
+    if (menuIndex===1){
+      console.log("executing menu 1");
+      let x=document.getElementById("toDo-container");
+      x.style.display="block";
+      x=document.getElementById("toDoInput-container");
+      x.style.display="block";
+      x=document.getElementById("inputToDo");
+      x.style.display="block";
+    }
+    else {
+      if (menuIndex===2) {  // display destination list menus
+        console.log("executing menu 2");
+        setMidLower(true,1);
+        //setMidUpperRight(true,3);
+        let xxx=document.getElementById("acceptBtn");
+        xxx.style.display="block";
+        //Test data @@@@@@@@@@@@@
+        console.log("creating dest list");
+        let x=document.getElementById("destList");
+        for (let a=0; a < 10; a++) {
+          console.log( `@@@ ${a} @@@@`);
+          let y=document.createElement("li");
+          y.id="dest"+a;
+          y.innerHTML=`MyCity ${a}:MyState:MyCountry:lat:00000:lon:11111`;
+          console.log(y);
+          x.appendChild(y); 
+
+        // Test data end @@@@@@@@@@@@@          
+        }
+
+
+      }
+      else {
+        if (menuIndex === 3) {
+          console.log("executing menu 3");
+          setMenu(0);
+        }
+      }
+    }
   }
 }
 
@@ -150,7 +230,8 @@ function setMenuPage(pageIndex) {
 }
 
 // Weather tab page controller
-function openWeather(event, pageIndex) { 
+function openWeather(pageIndex) { 
+  console.log("made open weather index "+pageIndex)
   let i=0;
   let myTabs = document.getElementsByClassName("tabPage");
   let myTabBtn = document.getElementsByClassName("tabButton");
@@ -210,9 +291,10 @@ function delToDoItem(event) {  // Delete ToDo item from list
 }
 
 // label color reset and set click color
-function setColor(event,myElem,setClick) {
-  console.log("i came from");
-  console.log(event.target);
+function setColor(myElm,setClick) {
+  let myElem=document.getElementById(myElm);
+  console.log("@@@@@@@@@@@@@@i came from "+myElem);
+  //console.log(event.target);
   console.log(myElem.className); 
  let x=document.getElementsByClassName(myElem.className);
  console.log(x);
@@ -223,9 +305,13 @@ function setColor(event,myElem,setClick) {
  }
  console.log("made it thru loop");
  if (setClick) {
-  console.log(myElem.id);
+   console.log(" entering setclick");
+  console.log(myElem);
+  //x=document.getElementById(myElem.id);
   x=document.getElementById(myElem.id);
-  x.setAttribute("style", "color: white;");
+  //x.setAttribute("style", "color: white;");
+  x.style.color="white";
+  console.log("leaving setclick");
  }
 }
 
@@ -235,17 +321,24 @@ function setCitySearch(event,myElem) {
  
 }
 
-function setEdit(event,myindx) {  // turn on ToDo edit when label is clicked
-  console.log(`my index = `);
-  setColor(event, event.target, true);
-  console.log(myindx);
+function setEdit(myinx) {  // turn on ToDo edit when label is clicked
+  
+  //console.log(event);
+  //setColor(event, myindx, true);
+  setColor(myinx, true);
+  console.log(myinx);
   let y = document.getElementById("inputToDo");
   console.log(y);
-  console.log(myindx.id);
+  //x=document.getElementById(myindx);   // addeventlistner
+  let myindx = document.getElementById(myinx);
+  console.log(`&&&&&&&&&&&&&&&&&&&&&&& my index = `+myindx);
+  console.log(myindx);
   console.log(myindx.innerHTML);
   //myindx.setAttribute("style", "color: black;");
   y.name = myindx.id;
+  //y.name = myindx;
   y.value = myindx.innerHTML.trim();
+  //y.value = x.innerHTML;
   isBtnOn(true);
 
   
@@ -287,8 +380,14 @@ function createToDo(event) {
   //y.innerHTML="    "+document.getElementById("inputToDo").value;
   y.innerHTML="    "+d.value;
   d.value="";
-  y.setAttribute("onclick",`return Client.setEdit(event,${y.id})`);  // create an event handler for label
+  console.log("@@@@@@@@@@@@@@@"+y.id);
+  //y.setAttribute("onclick",`return Client.setEdit(event,${y.id})`);  // create an event handler for label
+  //y.setAttribute("onclick",`return Client.setEdit(${y.id})`);  // create an event handler for label
+  y.addEventListener("click", setEdit.bind(null,y.id));
+
+  console.log(" appending label event listener");
   x.appendChild(y);
+  console.log(" thru checkbox and label loop");
   y=document.createElement("br");
   y.id=`brcheck${b}`;
   x.appendChild(y);
@@ -303,8 +402,8 @@ function newList(event) {
   exitEdit();
   let x=document.getElementById("counterItem");
   x.innerHTML="0";
-  setMidLow(2);
-  setMenu(1);
+  
+  
   //x=document.getElementById("toDo-container");
   //x.setAttribute("style","display: block");
   //x=document.getElementById("toDoInput-container");
@@ -314,7 +413,10 @@ function newList(event) {
   const myItems = document.getElementById("toDoList");
   while (myItems.firstChild) {
     myItems.removeChild(myItems.firstChild);}
-    console.log("completed newlist");
+  setMidLower(true,2);
+  setMenu(1);
+  console.log("completed newlist");
+
 }
 
 function checkKey(event) {
@@ -323,6 +425,17 @@ function checkKey(event) {
   console.log(event.target);
   if (event.keyCode === 13) { 
     createToDo(event);
+  }
+}
+
+function isUs(event) {
+  if (document.getElementById("countryField").value === "United States") {
+    document.getElementById("stateField").disabled = false;
+    document.getElementById("stateLabel").style.color="black";
+  }else {
+    document.getElementById("stateField").value="";
+    document.getElementById("stateField").disabled = true;
+    document.getElementById("stateLabel").style.color="grey";
   }
 }
 
@@ -361,5 +474,5 @@ function checkForName(inputData) {
     return false;
   }
 }
-export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem };
+export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu };
 export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft };

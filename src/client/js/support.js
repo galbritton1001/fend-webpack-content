@@ -1,6 +1,4 @@
-import { setMidLower } from "./nameChecker.js";
-
-let loopy =[];
+import { setMidLower } from "./app.js";
 
 let slideIndex = 1;
 
@@ -66,7 +64,6 @@ function AddSlides(slideList) {
     dotElem.id="dot"+a;
     //dotElem.setAttribute("onclick",`return Client.currentSlide(${a});`);
     dotElem.addEventListener("click", function () {currentSlide(a);});
-    loopy.push(a);
     // create an image holder
     console.log("creating image container")
     let slideDiv = document.createElement("div");
@@ -129,16 +126,16 @@ function popUlDest(json) {
   while (x.firstChild) {
     x.removeChild(x.firstChild);
   }
-  let a=0;
   let str="";
   let lst=json.geonames;
-  for (a=0; a < json.geonames.length; a++) {
+  for (let a=0; a < json.geonames.length; a++) {
     console.log("My City name list item "+a);
     console.log(lst[a]);
     str=`${lst[a].name}: ${lst[a].adminName1}: ${lst[a].countryCode}: Lat: ${lst[a].lat}: Lon: ${lst[a].lng}`;
     console.log("my String ="+str);
     let y=document.createElement("li");
     y.id="dest"+a;
+    y.classList.add("travelDest");
     y.innerHTML=str;
     console.log(y);
     x.appendChild(y);
@@ -324,19 +321,20 @@ async function retrieveData(urlTxt) {
     console.log(json);
     console.log(JSON.stringify(json));
     popPics(json); // send to picture list builder
-    Client.setMidUpperLeft(true,3);
-    Client.setRightState(true);
-    Client.setMidUpperRight(true);
+    //Client.setMidUpperLeft(true,3);
+    //Client.setRightState(true);
+    //Client.setMidUpperRight(true);
+    Client.setMenu(2);// display ul destination list
     alert(`API call succsessful`);
   } catch (error) {
     console.log("error", error);
     alert(`API call fail ${error}`);
     //############# remove this section is for testing only###############
-    Client.setMenuPage(3);
-    Client.setMidUpperLeft(true,3);
-    Client.setRightState(true);
-    Client.setMidUpperRight(true);
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Calling Menu 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   // Client.setMenuPage(3);
+    //Client.setMidUpperLeft(true,3);
+    //Client.setRightState(true);
+    //Client.setMidUpperRight(true);
+    //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Calling Menu 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     Client.setMenu(2);
 
     ///############end test section ############
@@ -344,22 +342,9 @@ async function retrieveData(urlTxt) {
 }
 
 function handleSubmit(event) {
-  //event.preventDefault();
- // console.log("check url put into the form field");
 
- // let urlText = document.getElementById("urlName").value;
- // const inputData = [urlText, false];
- // console.log(
-//    "@@@@@@@@@@@@@@@@@@@@@@  Botton clcik to call namechecker  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
- // );
- // if (Client.checkForName(inputData)) {
- //   console.log(
- //     "@@@@@@@@@@@@@@@@@@@@@@  calling API  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-  //  );
     retrieveData('Paris');
- // } else {
- //   alert(`API call canceled`);
-  //}
+
 }
 
 export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide };

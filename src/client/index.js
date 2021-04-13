@@ -1,5 +1,5 @@
-import { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, isUs, setMenu} from "./js/nameChecker";
-import { handleSubmit, AddSlides, showSlides, currentSlide, changeSlide } from "./js/formHandler";
+import { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, isUs, setMenu, acceptDest, eraseToDoList} from "./js/app.js";
+import { handleSubmit, AddSlides, showSlides, currentSlide, changeSlide } from "./js/support.js";
 import {} from "./styles/resets.scss";
 import {} from "./styles/base.scss";
 import {} from "./styles/form.scss";
@@ -11,4 +11,4 @@ console.log(checkForName);
 
 alert("I EXIST");
 
-export { checkForName, handleSubmit, AddSlides, showSlides, currentSlide, changeSlide, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, isUs, setMenu};
+export { checkForName, handleSubmit, AddSlides, showSlides, currentSlide, changeSlide, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, isUs, setMenu, acceptDest, eraseToDoList};

@@ -1,5 +1,5 @@
-import { retrieveData } from "../src/client/js/formHandler.js";
-import { checkForName } from "../src/client/js/nameChecker.js";
+import { retrieveData } from "../src/client/js/support.js";
+import { checkForName } from "../src/client/js/app.js";
 
 describe("Testing the submit functionality", () => {
   // The test() function has two arguments - a string description, and an actual test as a callback function.
@@ -7,7 +7,7 @@ describe("Testing the submit functionality", () => {
     document.body.innerHTML = `
         <input id="urlName" />
       `;
-    require("../src/client/js/formHandler.js");
+    require("../src/client/js/support.js");
     const urlName = document.getElementById("urlName");
     urlName.value = "https://www.google.com";
     let inputData = [urlName.value, true];

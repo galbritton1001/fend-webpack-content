@@ -245,8 +245,9 @@ h1 {
 }
 
 li {
-  padding: 10px 0px 0px 10px;
+  padding: 5px 10px 5px 5px;
   color: black;
+  cursor: pointer;
 }
 
 li:hover {
@@ -285,7 +286,7 @@ button {
   right: 53%;
 }
 // add ToDo list button 
-#newToDo, #acceptBtn {
+#newToDo, #acceptBtn, #eraseToDo {
   position: absolute;
   bottom: 53%;
   right: 53%;

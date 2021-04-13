@@ -1,4 +1,4 @@
-import { checkForName } from "../src/client/js/nameChecker.js";
+import { checkForName } from "../src/client/js/app.js";
 
 describe("Testing the URL check functionality good URL", () => {
   test("The checkForName() function good URL returns true", () => {

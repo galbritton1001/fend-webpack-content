@@ -1,15 +1,17 @@
-import { AddSlides } from "./formHandler.js";
+import { AddSlides } from "./support.js";
 
 window.onload = (event) => {
   console.log("set initial window");
   setMenu(0);
   setMidUpperLeft(false,0);
-  document.getElementById("homeBtn").addEventListener("click", function() {return Client.setMenuPage(3);});
+  document.getElementById("homeBtn").addEventListener("click", function() {return Client.setMenu(3);});
   document.getElementById("PlannerBtn").addEventListener("click", function() {return Client.setMenuPage(0);});
   document.getElementById("newsBtn").addEventListener("click", function() {return Client.setMenuPage(1);});
   document.getElementById("aboutBtn").addEventListener("click", function() {return Client.setMenuPage(2);});
   document.getElementById("submitButton1").addEventListener("click", function() {return Client.handleSubmit(event);});
   document.getElementById("newToDo").addEventListener("click", function () {return Client.newList(event);});
+  document.getElementById("eraseToDo").addEventListener("click", function () {return Client.eraseToDoList();});
+  document.getElementById("acceptBtn").addEventListener("click", function () {return Client.acceptDest(event);});
   document.getElementById("delToDoItem").addEventListener("click", function () {return Client.delToDoItem(event);});
   document.getElementById("exitEditMode").addEventListener("click", function () {return Client.exitEdit(event);});
   document.getElementById("tb1").addEventListener("click", function () {return Client.openWeather("0");});
@@ -28,18 +30,26 @@ function setMidLow(pageIndx) { // show menu page for mid lower menu
     console.log(a[b]);
     a[b].style.display="none";
   }
+  if (pageIndx === "off") {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@ Lower Off @@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    return;
+  }
   console.log("turning on selected Page"+pageIndx);
   a[pageIndx].style.display="block";
   console.log("leaving setMidLow");
 }
 
 function setMidUpLft(pageIndx) { // show menu page for mid upper menu
+
   let a=document.getElementsByClassName("menuPage");
-  let b=0;
-  for (b=0; b < a.length; b++) {
+  for (let b=0; b < a.length; b++) {
     a[b].style.display="none";
   }
-  a[pageIndx].style.display="block";
+  if (pageIndx === "off") {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ off @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    return;
+  }
+    a[pageIndx].style.display="block";
 }
 
 
@@ -152,7 +162,22 @@ function clearWeather(){
     setMidLow(0);
   }
 
+  function currentDest(myElem) {
+    let x = document.getElementById("travelCity");
+    let y = document.getElementById(myElem);
+    let dest = y.innerHTML.split(":");
+    x.innerHTML = dest[0];
+    x = document.getElementById("travelAdmin");
+    x.innerHTML=dest[1];
+    x = document.getElementById("travelCountry");
+    x.innerHTML=dest[2];
+    x = document.getElementById("travelLat");
+    x.innerHTML=dest[3]+":"+dest[4];
+    x = document.getElementById("travelLon");
+    x.innerHTML=dest[5]+":"+dest[6];
 
+    setColor(y.id,true);
+  }
 
 //sets display page states and data entry 
 function setMenu(menuIndex) { 
@@ -183,23 +208,29 @@ function setMenu(menuIndex) {
     else {
       if (menuIndex===2) {  // display destination list menus
         console.log("executing menu 2");
+        setMenuPage(3);
+        setMidUpperLeft(true,3);
+        setRightState(true);
+        setMidUpperRight(true);
         setMidLower(true,1);
-        //setMidUpperRight(true,3);
-        let xxx=document.getElementById("acceptBtn");
-        xxx.style.display="block";
+        rotateBtn("acceptBtn");
         //Test data @@@@@@@@@@@@@
-        console.log("creating dest list");
+        console.log("creating dest list");  // creating test list
         let x=document.getElementById("destList");
         for (let a=0; a < 10; a++) {
           console.log( `@@@ ${a} @@@@`);
           let y=document.createElement("li");
           y.id="dest"+a;
-          y.innerHTML=`MyCity ${a}:MyState:MyCountry:lat:00000:lon:11111`;
+          y.innerHTML=`MyCity ${a}:MyState:MyCountry:lat:00000:lon:11111`;         
+          y.classList.add("travelDest");
+          y.addEventListener("click", function () {currentDest("dest"+a);});
           console.log(y);
           x.appendChild(y); 
-
-        // Test data end @@@@@@@@@@@@@          
         }
+        // Test data end @@@@@@@@@@@@@ 
+        currentDest("dest0");
+                 
+        
 
 
       }
@@ -207,6 +238,15 @@ function setMenu(menuIndex) {
         if (menuIndex === 3) {
           console.log("executing menu 3");
           setMenu(0);
+          setMidUpperLeft(false,0);
+          setMidUpLft("off");
+        }
+        else {
+          if (menuIndex === 4) {
+            setMidLower(true,2);
+            setMenu("1");
+            
+          }
         }
       }
     }
@@ -245,6 +285,19 @@ function openWeather(pageIndex) {
 
 
 
+function rotateBtn(btnName) {
+  console.log("btnName = "+btnName);
+  let a= document.getElementById("acceptBtn");
+  a.style.display="none";
+  a= document.getElementById("newToDo");
+  a.style.display="none";
+  a= document.getElementById("eraseToDo");
+  a.style.display="none";
+  a= document.getElementById(btnName);
+  console.log(a);
+  a.style.display="block";
+}
+
 function isBtnOn(showBtn) {   // turn on/turn off ToDo list edit buttons
   let a=document.getElementById("delToDoItem");
   let b=document.getElementById("exitEditMode");
@@ -272,6 +325,12 @@ function exitEdit(event){  // exit ToDo edit mode
   d.value="";
 }
 
+function eraseToDoList() {
+clearToDoList();
+setMenu(4);
+setMidLower(true,0);
+rotateBtn("newToDo");
+}
 
 function delToDoItem(event) {  // Delete ToDo item from list
   console.log("Deleting Todo list item");
@@ -320,6 +379,13 @@ function setCitySearch(event,myElem) {
  // check if city and state the same
  
 }
+
+function acceptDest(event) {
+  setMenu(4);
+  setMidLow("off");
+  rotateBtn("newToDo");
+}
+
 
 function setEdit(myinx) {  // turn on ToDo edit when label is clicked
   
@@ -415,6 +481,7 @@ function newList(event) {
     myItems.removeChild(myItems.firstChild);}
   setMidLower(true,2);
   setMenu(1);
+  rotateBtn("eraseToDo");
   console.log("completed newlist");
 
 }
@@ -474,5 +541,5 @@ function checkForName(inputData) {
     return false;
   }
 }
-export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu };
-export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft };
+export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
+export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList };

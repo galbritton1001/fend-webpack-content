@@ -7,7 +7,7 @@ const fetch = require("node-fetch");
 //var bodyParser = require("body-parser");
 //var cors = require("cors");
 
-var mySave = {};
+var mySave = [];
 
 var json = {
   title: "test json response",
@@ -111,6 +111,39 @@ app.post("/getGeo", async (req, res) => {
     res.json(myGeoname);
   }catch{console.log("@@@@ error @@@@ ",error);}
 
+});
+
+app.post("/postSave", function (req, res) { // Save dest record
+  try{
+    console.log(" i'm here");
+    console.log(req.body);
+    mySave.push(req.body);
+    res.json("Save ok");
+    console.log(mySave);
+  }
+  catch {
+    console.log("@@@@@@@@@@@@@@@@@ Error @@@@@@@@@@@@@@@@@@@@@",error); 
+    res.json(" Save failed "+error); }
+  
+});
+
+app.post("/postGetDest", function (req, res) { // get dest record
+  try{
+    res.json(mySave[req.body]);
+  }
+  catch { res.json(" Get Dest Failed "+error); }
+});
+
+app.post("/postGetList", function (req, res) { // get dest list
+  try{
+    let myList =[];
+    for (let a=0; a > mySave.length; a++) {
+      myList.push(mySave[a].destx);
+    }
+    res.json(myList);
+  }
+  catch { res.json("Get List failed "+error); }
+  
 });
 
 // designates what port the app will listen to for incoming requests

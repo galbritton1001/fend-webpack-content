@@ -1,4 +1,4 @@
-import { AddSlides } from "./support.js";
+import { AddSlides, saveTrip } from "./support.js";
 
 window.onload = (event) => {
   console.log("set initial window");
@@ -11,6 +11,7 @@ window.onload = (event) => {
   document.getElementById("submitButton1").addEventListener("click", function() {return Client.handleSubmit(event);});
   document.getElementById("newToDo").addEventListener("click", function () {return Client.newList(event);});
   document.getElementById("eraseToDo").addEventListener("click", function () {return Client.eraseToDoList();});
+  document.getElementById("saveToDo").addEventListener("click", function () {return Client.saveList();});
   document.getElementById("acceptBtn").addEventListener("click", function () {return Client.acceptDest(event);});
   document.getElementById("delToDoItem").addEventListener("click", function () {return Client.delToDoItem(event);});
   document.getElementById("exitEditMode").addEventListener("click", function () {return Client.exitEdit(event);});
@@ -46,7 +47,7 @@ function setMidUpLft(pageIndx) { // show menu page for mid upper menu
     a[b].style.display="none";
   }
   if (pageIndx === "off") {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ off @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ up left off @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return;
   }
     a[pageIndx].style.display="block";
@@ -325,6 +326,54 @@ function exitEdit(event){  // exit ToDo edit mode
   d.value="";
 }
 
+function enableToDoSave(statusFlg) {
+  let x = document.getElementById("saveToDo");
+  console.log("reached enable todo status flag "+statusFlg)
+  if (statusFlg) {
+    x.disabled = false;
+  }
+  else{
+    x.disabled = true;
+  }
+  console.log(x.disabled);
+}
+
+function toggleCheckbox(checkIndex) {
+  console.log(checkIndex);
+  let x = document.getElementById(checkIndex);
+  console.log("Toggle Checkbox old value = "+x.value);
+  if (x.value==="true") {
+    console.log(`changing ${checkIndex} from true to false`);
+    x.value = false;
+  }
+  else{
+    console.log(`changing ${checkIndex} from false to true`);
+    x.value = true;
+  }
+  console.log("Toggle Checkbox new value = "+x.value);
+  enableToDoSave(true);
+  
+}
+
+function saveList() {
+  enableToDoSave(false);
+  let myBoxData = [];
+  let myLabelData = [];
+  let x = document.getElementsByClassName("toDoCheck");
+  let y = document.getElementsByClassName("checkBoxLabel");
+  for (let a=0; a < x.length; a++) {
+    console.log(x);
+    console.log(y);
+    console.log(x[a].value);
+    console.log(a);
+    myBoxData.push(x[a].value);
+    myLabelData.push(y[a].innerHTML);
+  }
+  console.log(myBoxData);
+  console.log(myLabelData);
+
+}
+
 function eraseToDoList() {
 clearToDoList();
 setMenu(4);
@@ -347,6 +396,7 @@ function delToDoItem(event) {  // Delete ToDo item from list
   doc.setAttribute("style", "display: block");
   b.parentNode.removeChild(b);
   exitEdit(event);
+  enableToDoSave(true);
 }
 
 // label color reset and set click color
@@ -384,13 +434,28 @@ function acceptDest(event) {
   setMenu(4);
   setMidLow("off");
   rotateBtn("newToDo");
+  saveTrip("0");  // will need to set an index to this to save to the correct rec.
+                  // also will need to adjust function to accept and use
 }
 
 
+//SAVE WILL be city
+ //admin
+ //country
+ //latlon
+ //hastodo true or false
+ //todoarray for todo items
+ //pic array for pics 
+ // all wrapped up into one json object
+
+
+
+ 
 function setEdit(myinx) {  // turn on ToDo edit when label is clicked
   
   //console.log(event);
   //setColor(event, myindx, true);
+
   setColor(myinx, true);
   console.log(myinx);
   let y = document.getElementById("inputToDo");
@@ -437,6 +502,7 @@ function createToDo(event) {
   y.id=`check${b}`;
   y.classList.add("toDoCheck");
   y.value =false;
+  y.addEventListener("click", toggleCheckbox.bind(null,y.id));
   console.log(y);
   x.appendChild(y);
   y=document.createElement("label");   // create a label and assign to checkbox
@@ -492,6 +558,7 @@ function checkKey(event) {
   console.log(event.target);
   if (event.keyCode === 13) { 
     createToDo(event);
+    enableToDoSave(true);
   }
 }
 
@@ -542,4 +609,4 @@ function checkForName(inputData) {
   }
 }
 export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
-export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList };
+export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList, saveList };

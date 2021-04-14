@@ -10,6 +10,79 @@ AddSlides(defaultImgList);
 
 showSlides(slideIndex);
 
+// post dest save to server
+async function saveTrip(tripRec) {
+  let toDox = [];
+  let picx = [];
+  let destx = document.getElementById("travelCity").innerHTML;
+  let adminx = document.getElementById("travelAdmin").innerHTML;
+  let countryx = document.getElementById("travelCountry").innerHTML;
+  let latx = document.getElementById("travelLat").innerHTML;
+  let lonx = document.getElementById("travelLon").innerHTML;
+  if (!!document.getElementsByClassName("toDoCheck")) {
+    // add all of the toDo labels here in toDox
+    toDox = [];
+  }
+  else {
+    toDox = [];
+  }
+  if (mainImgList===[]) {
+   picx = defaultImgList;
+  }
+  else{
+   picx = mainImgList; 
+  }
+  let myTripRec = {destx,adminx,countryx,latx,lonx,toDox,picx};
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(myTripRec),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    let myResponse = await fetch("/postSave", postOpts); 
+    json = await myResponse.json();
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+json+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log(JSON.stringify(json));
+    // add to a saved record list here
+  } 
+  catch { console.log("Error saveing travel destination ",error);}  
+
+}
+
+async function getDest(destindex) { 
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(destIndex),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  };
+  let myResponse = await fetch("/postGetDest", postOpts); 
+  json = await myResponse.json();
+  console.log(json);
+  console.log(JSON.stringify(json));
+  // add to a saved record list here
+
+}
+
+async function getDestList() {
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(destIndex),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  };
+  let myResponse = await fetch("/postGetList", postOpts); 
+  json = await myResponse.json();
+  console.log(json);
+  console.log(JSON.stringify(json));
+}
 
 // @@@@@@@@@@@@ Slide Show Functions @@@@@@@@@@@@@@@@
 
@@ -347,4 +420,4 @@ function handleSubmit(event) {
 
 }
 
-export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide };
+export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide, saveTrip, getDest, getDestList };

@@ -8,22 +8,19 @@
 
     <body>
             <div id="main-container">
-                <main>
-                    <div id="top-section"> 
+                <div id="top-section"> 
                         <img id="topimg" src="./images/img4.jpg" alt="deer picture" >
                         <h1>Travel Planner</h1>
-                    </div>
-                    <div id="middle-section">
+                </div>
+                <div id="middle-section">
                         <div id="midLeft-section">
                             <button id="homeBtn" class= "button">Home</button>
                             <button id="PlannerBtn" class= "button">Planner</button>
+                            <button id="savesBtn" class= "button">Saves</button>
                             <button id="newsBtn" class= "button">News</button>
                             <button id="aboutBtn" class= "button">About</button>
-                            <button id="saveBtn1" class= "button"></button>
-                            <button id="saveBtn2" class= "button"></button>
-                            <button id="saveBtn3" class= "button"></button>
-                            <button id="saveBtn4" class= "button"></button>
-                            <button id="mybutton"class= "button"></button>
+                            <br>
+                            <br>    
                         </div>
                         <div id="midMid-section">  
                             <div id="midMidUR-section"> <!-- Middle upper right window -->
@@ -41,16 +38,16 @@
                             <div id="midMidUl-section">  <!-- Middle upper left window -->
                                 <div id="infomation-container" class="menuPage">
                                     <label>Destination City<br>
-                                       <input type="text" id="cityField" class = "infoData" placeholder="City Name"></input><br><br>
+                                       <input type="text" id="cityField" class = "infoData" placeholder="City Name"></input><br>
                                     </label>
                                     <label for="stateField" id="stateLabel">State/Province<br>
-                                        <input type="text" id="stateField" class = "infoData" placeholder="State/Province Name"list="stateList"></input><br><br>
+                                        <input type="text" id="stateField" class = "infoData" placeholder="State/Province Name"list="stateList"></input><br>
                                     </label>
                                     <label for="countryField">Country<br>
-                                        <input type="text" id="countryField" onchange = "return Client.isUs(event)" class = "infoData" placeholder="Country Name"list="countryList"></input><br><br>
+                                        <input type="text" id="countryField" onchange = "return Client.isUs(event)" class = "infoData" placeholder="Country Name"list="countryList"></input><br>
                                     </label>
                                     <label for="dateField">Travel Date<br>
-                                        <input type="date"id="dateField" class = "infoData"></input><br><br>
+                                        <input type="date"id="dateField" class = "infoData"></input><br><br><br><br>
                                     </label>
                                     <button id="submitButton1" class="button">Submit</button>
                                     <datalist id="countryList">
@@ -320,12 +317,18 @@
                                     <p id="travelCountry"></p>
                                     <p id="travelLat"></p>
                                     <p id="travelLon"></p>
+                                    <p id="recordIdNumb"></p>
 
                                     <button id="acceptBtn" class="button">Accept</button>
                                     <button id="newToDo" class="button">Add ToDo</button>
                                     <button id="eraseToDo" class="button">Erase ToDo</button>
 
                                 </div>
+                                <div id="saveDestPage" class="menuPage">
+                                    <div id="savedDest-container">Saved Destinations
+                                        <ul id="SavedDestList"></ul>
+                                    </div>
+                                </div> 
 
                             </div>
                             <div id="midMidLw-section">  <!-- Middle lower window -->
@@ -343,7 +346,7 @@
                                     <br>
                                     <br>
                                     <br>
-                                    <input id="inputToDo" type="text"  placeholder="Enter ToDo task" onkeypress ="return Client.checkKey(event)"style="display: none">
+                                    <input id="inputToDo" type="text"  placeholder="Enter ToDo task" onkeypress ="return Client.checkKey(event,0)"style="display: none">
                                     <button id="delToDoItem" class="button"style="display: none">Delete Item</button> 
                                     <button id="exitEditMode" class="button"style="display: none">Exit Edit</button>
                                     <button id="saveToDo" class="button"disabled>Save</button>
@@ -381,11 +384,10 @@
                                 </div>    
                             </div>
                         </div>
-                    </div>     
-                    <div id="bottom-section">
+                </div>     
+                <div id="bottom-section">
                         <footer>My footer</footer>
-                    </div>
-                </main>
+                </div>
             </div>
             
         <script>

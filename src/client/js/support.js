@@ -1,6 +1,10 @@
-import { setMidLower } from "./app.js";
+import { createToDo, setMenu, setMidLower } from "./app.js";
 
 let slideIndex = 1;
+
+let destRecords = [];
+
+let destNumber = 0;
 
 let mainImgList = [];
 
@@ -10,29 +14,120 @@ AddSlides(defaultImgList);
 
 showSlides(slideIndex);
 
+function loadSaveDest(idx){
+  Client.setMenu(0);
+  console.log("@@@@@ Load save Destination into Planner @@@@@@@@");
+  console.log(destRecords[idx]); 
+  document.getElementById("recordIdNumb").innerHTML = destRecords[idx].recId;  
+  document.getElementById("travelCity").innerHTML = destRecords[idx].destx;
+  document.getElementById("travelAdmin").innerHTML = destRecords[idx].adminx;
+  document.getElementById("travelCountry").innerHTML = destRecords[idx].countryx;
+  document.getElementById("travelLat").innerHTML = destRecords[idx].latx;
+  document.getElementById("travelLon").innerHTML = destRecords[idx].lonx;
+  mainImgList=destRecords[idx].picx;
+  console.log("finished memu page starting Todo");
+  console.log(destRecords[idx].toDoCheckx.length);
+  if (destRecords[idx].toDoCheckx.length < 1) {
+    Client.rotateBtn("newToDo");
+    console.log("no todo list");
+  }
+  else {
+    console.log("starting create todo list");
+    Client.newList();
+    let xList = document.getElementById("inputToDo");
+    xList.name = "";
+    console.log("starting todo loop");
+    for (let a = 0; a < destRecords[idx].toDoCheckx.length; a++) {
+      xList.value = destRecords[idx].toDoLabelx[a];
+      console.log(xList.value);
+      Client.createToDo(event);
+      if (destRecords[idx].toDoCheckx[a] === "true") {
+        let y = document.getElementById(`check${a}`);
+        y.checked = true;
+        y.value = true;
+      }
+    }
+  }
+  console.log("todo loop done adding image list");
+  if (mainImgList.length < 1) {
+    console.log("adding default image");
+    AddSlides(defaultImgList);
+  }
+  else {
+    AddSlides(mainImgList);
+  }
+  console.log("setting active menu pages");
+  Client.setMenu(6);
+}
+
+function loadSaveDestList() {
+  console.log("Made it to destination save list");
+  let x = document.getElementById("SavedDestList");
+  while (x.firstChild) {
+    x.removeChild(x.firstChild);
+  } 
+  console.log("making list");
+  for (let a=0; a < destNumber; a++) {
+    console.log("record "+a);
+    console.log(destRecords[a].recStatus);
+    if (destRecords[a].recStatus === "active") {
+      let y = document.createElement("li");
+      let idx = destRecords[a].recId;
+      y.classList.add("travelDest");
+      y.id = "travelLi"+idx;
+      y.innerHTML = destRecords[a].recId+" "+destRecords[a].destx+" "+destRecords[a].adminx+" "+destRecords[a].countryx;
+      console.log("adding event listner");
+      y.addEventListener("click", function () {loadSaveDest(destRecords[a].recId);});
+      console.log(" saving record to list");
+      x.appendChild(y);
+    }
+  }
+}
+
+async function getDestList() {
+let postOpts = {
+  method: "post",
+  credentials: "same-origin",
+  headers: {
+    "Content-Type": "application/json",
+  }
+};
+let myResponse = await fetch("/postGetList", postOpts); 
+let json = await myResponse.json();
+console.log(json);
+destRecords = json;
+destNumber = destRecords.length;
+loadSaveDestList();
+}
+
 // post dest save to server
-async function saveTrip(tripRec) {
-  let toDox = [];
+async function saveTrip() {
+  document.getElementById("recordIdNumb").innerHTML = destNumber;
+  let recId = destNumber;
+  let recStatus="active";
+  let toDoLabelx = [];
+  let toDoCheckx =[]
   let picx = [];
   let destx = document.getElementById("travelCity").innerHTML;
   let adminx = document.getElementById("travelAdmin").innerHTML;
   let countryx = document.getElementById("travelCountry").innerHTML;
   let latx = document.getElementById("travelLat").innerHTML;
   let lonx = document.getElementById("travelLon").innerHTML;
-  if (!!document.getElementsByClassName("toDoCheck")) {
+
+  //if (!!document.getElementsByClassName("toDoCheck")) {
     // add all of the toDo labels here in toDox
-    toDox = [];
-  }
-  else {
-    toDox = [];
-  }
+    //toDox = [];
+ //}
+ // else {
+    //toDox = [];
+ // }
   if (mainImgList===[]) {
    picx = defaultImgList;
   }
   else{
    picx = mainImgList; 
   }
-  let myTripRec = {destx,adminx,countryx,latx,lonx,toDox,picx};
+  let myTripRec = {recId,recStatus,destx,adminx,countryx,latx,lonx,toDoCheckx,toDoLabelx,picx};
   let postOpts = {
     method: "post",
     body: JSON.stringify(myTripRec),
@@ -43,12 +138,30 @@ async function saveTrip(tripRec) {
   };
   try {
     let myResponse = await fetch("/postSave", postOpts); 
-    json = await myResponse.json();
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+json+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    console.log(JSON.stringify(json));
-    // add to a saved record list here
+    let json = await myResponse.json();
+    destRecords = json;
+    destNumber = destRecords.length;
+    loadSaveDestList();
   } 
   catch { console.log("Error saveing travel destination ",error);}  
+}
+
+async function saveToDoList(toDoRec) {
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(toDoRec),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  };
+  let myResponse = await fetch("/postSaveToDo", postOpts); 
+  let json = await myResponse.json();
+  console.log(json);
+  destRecords = json;
+ 
+
+
 
 }
 
@@ -62,27 +175,13 @@ async function getDest(destindex) {
     }
   };
   let myResponse = await fetch("/postGetDest", postOpts); 
-  json = await myResponse.json();
+  let json = await myResponse.json();
   console.log(json);
   console.log(JSON.stringify(json));
   // add to a saved record list here
 
 }
 
-async function getDestList() {
-  let postOpts = {
-    method: "post",
-    body: JSON.stringify(destIndex),
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    }
-  };
-  let myResponse = await fetch("/postGetList", postOpts); 
-  json = await myResponse.json();
-  console.log(json);
-  console.log(JSON.stringify(json));
-}
 
 // @@@@@@@@@@@@ Slide Show Functions @@@@@@@@@@@@@@@@
 
@@ -420,4 +519,4 @@ function handleSubmit(event) {
 
 }
 
-export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide, saveTrip, getDest, getDestList };
+export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide, saveTrip, getDest, getDestList, saveToDoList };

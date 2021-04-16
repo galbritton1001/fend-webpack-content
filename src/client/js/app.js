@@ -2,12 +2,14 @@ import { AddSlides, saveTrip } from "./support.js";
 
 window.onload = (event) => {
   console.log("set initial window");
+  Client.getDestList();
   setMenu(0);
   setMidUpperLeft(false,0);
   document.getElementById("homeBtn").addEventListener("click", function() {return Client.setMenu(3);});
   document.getElementById("PlannerBtn").addEventListener("click", function() {return Client.setMenuPage(0);});
   document.getElementById("newsBtn").addEventListener("click", function() {return Client.setMenuPage(1);});
   document.getElementById("aboutBtn").addEventListener("click", function() {return Client.setMenuPage(2);});
+  document.getElementById("savesBtn").addEventListener("click", function() {return Client.setMenuPage(4);});
   document.getElementById("submitButton1").addEventListener("click", function() {return Client.handleSubmit(event);});
   document.getElementById("newToDo").addEventListener("click", function () {return Client.newList(event);});
   document.getElementById("eraseToDo").addEventListener("click", function () {return Client.eraseToDoList();});
@@ -195,6 +197,7 @@ function setMenu(menuIndex) {
   setRightState(false);
   setMidLower(false,0);
   setInputFields(0);
+  
   }
   else {
     if (menuIndex===1){
@@ -247,6 +250,20 @@ function setMenu(menuIndex) {
             setMidLower(true,2);
             setMenu("1");
             
+          }
+          else {
+            if (menuIndex === 5) {
+              setMidUpperLeft(true,4);
+            }
+            else {
+              if (menuIndex === 6){
+                setMidLower(true,2);
+                setMenu(1);
+                setMidUpperLeft(true,3);
+                setRightState(true);
+                setMidUpperRight(true);
+              }
+            }
           }
         }
       }
@@ -326,9 +343,9 @@ function exitEdit(event){  // exit ToDo edit mode
   d.value="";
 }
 
-function enableToDoSave(statusFlg) {
-  let x = document.getElementById("saveToDo");
-  console.log("reached enable todo status flag "+statusFlg)
+function enableButton (myElem, statusFlg) {
+  let x = document.getElementById(myElem);
+  console.log("reached enable button "+myElem+" status flag "+statusFlg)
   if (statusFlg) {
     x.disabled = false;
   }
@@ -337,6 +354,18 @@ function enableToDoSave(statusFlg) {
   }
   console.log(x.disabled);
 }
+
+//function enableToDoSave(statusFlg) {
+ // let x = document.getElementById("saveToDo");
+ // console.log("reached enable todo status flag "+statusFlg)
+//  if (statusFlg) {
+//    x.disabled = false;
+//  }
+ // else{
+ //   x.disabled = true;
+//  }
+ // console.log(x.disabled);
+//}
 
 function toggleCheckbox(checkIndex) {
   console.log(checkIndex);
@@ -351,14 +380,15 @@ function toggleCheckbox(checkIndex) {
     x.value = true;
   }
   console.log("Toggle Checkbox new value = "+x.value);
-  enableToDoSave(true);
+  enableButton("saveToDo",true);
   
 }
 
 function saveList() {
-  enableToDoSave(false);
+  enableButton("saveToDo",false);
   let myBoxData = [];
   let myLabelData = [];
+  let recId = document.getElementById("recordIdNumb").innerHTML;  // this will need to be the id of the saved record 0 for testing
   let x = document.getElementsByClassName("toDoCheck");
   let y = document.getElementsByClassName("checkBoxLabel");
   for (let a=0; a < x.length; a++) {
@@ -369,8 +399,11 @@ function saveList() {
     myBoxData.push(x[a].value);
     myLabelData.push(y[a].innerHTML);
   }
+  let toDoRec = {recId,myBoxData,myLabelData};
   console.log(myBoxData);
   console.log(myLabelData);
+  return Client.saveToDoList(toDoRec);
+
 
 }
 
@@ -396,7 +429,7 @@ function delToDoItem(event) {  // Delete ToDo item from list
   doc.setAttribute("style", "display: block");
   b.parentNode.removeChild(b);
   exitEdit(event);
-  enableToDoSave(true);
+  enableButton("saveToDo",true);
 }
 
 // label color reset and set click color
@@ -430,12 +463,12 @@ function setCitySearch(event,myElem) {
  
 }
 
-function acceptDest(event) {
+function acceptDest(event) { 
   setMenu(4);
   setMidLow("off");
   rotateBtn("newToDo");
-  saveTrip("0");  // will need to set an index to this to save to the correct rec.
-                  // also will need to adjust function to accept and use
+  saveTrip();
+
 }
 
 
@@ -552,13 +585,15 @@ function newList(event) {
 
 }
 
-function checkKey(event) {
+function checkKey(event,srcIndex) {
   console.log(event.keyCode);
   console.log("i came from");
   console.log(event.target);
   if (event.keyCode === 13) { 
+    if (srcIndex === 0){
     createToDo(event);
-    enableToDoSave(true);
+    enableButton("saveToDo",true);
+    }
   }
 }
 
@@ -609,4 +644,4 @@ function checkForName(inputData) {
   }
 }
 export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
-export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList, saveList };
+export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList, saveList, rotateBtn };

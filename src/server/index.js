@@ -113,12 +113,28 @@ app.post("/getGeo", async (req, res) => {
 
 });
 
+app.post("/postSaveToDo", function (req, res) { // Save dest record
+  try{
+    console.log(" i'm here");
+    console.log(req.body);
+    mySave[req.body.recId].toDoCheckx = req.body.myBoxData;
+    mySave[req.body.recId].toDoLabelx = req.body.myLabelData;
+    res.json(mySave);
+    console.log(mySave);
+  }
+  catch {
+    console.log("@@@@@@@@@@@@@@@@@ Error @@@@@@@@@@@@@@@@@@@@@",error); 
+    res.json(" Save failed "+error); }
+  
+});
+
+
 app.post("/postSave", function (req, res) { // Save dest record
   try{
     console.log(" i'm here");
     console.log(req.body);
     mySave.push(req.body);
-    res.json("Save ok");
+    res.json(mySave);
     console.log(mySave);
   }
   catch {
@@ -136,11 +152,8 @@ app.post("/postGetDest", function (req, res) { // get dest record
 
 app.post("/postGetList", function (req, res) { // get dest list
   try{
-    let myList =[];
-    for (let a=0; a > mySave.length; a++) {
-      myList.push(mySave[a].destx);
-    }
-    res.json(myList);
+    
+    res.json(mySave);
   }
   catch { res.json("Get List failed "+error); }
   

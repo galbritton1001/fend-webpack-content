@@ -14,19 +14,24 @@ AddSlides(defaultImgList);
 
 showSlides(slideIndex);
 
+//Load from saved destinations
 function loadSaveDest(idx){
   Client.setMenu(0);
-  console.log("@@@@@ Load save Destination into Planner @@@@@@@@");
-  console.log(destRecords[idx]); 
+  console.log("@@@@@ Load save Destination into Planner @@@@@@@@"); 
+  // Load upper right display
+  console.log(destRecords[idx]);    
   document.getElementById("recordIdNumb").innerHTML = destRecords[idx].recId;  
   document.getElementById("travelCity").innerHTML = destRecords[idx].destx;
   document.getElementById("travelAdmin").innerHTML = destRecords[idx].adminx;
   document.getElementById("travelCountry").innerHTML = destRecords[idx].countryx;
+  document.getElementById("travelDate").innerHTML = destRecords[idx].datex;
   document.getElementById("travelLat").innerHTML = destRecords[idx].latx;
   document.getElementById("travelLon").innerHTML = destRecords[idx].lonx;
   mainImgList=destRecords[idx].picx;
   console.log("finished memu page starting Todo");
   console.log(destRecords[idx].toDoCheckx.length);
+  // load ToDo List
+  Client.setMidLower(true,"off");
   if (destRecords[idx].toDoCheckx.length < 1) {
     Client.rotateBtn("newToDo");
     console.log("no todo list");
@@ -48,6 +53,7 @@ function loadSaveDest(idx){
       }
     }
   }
+  // load image slideshow
   console.log("todo loop done adding image list");
   if (mainImgList.length < 1) {
     console.log("adding default image");
@@ -56,8 +62,15 @@ function loadSaveDest(idx){
   else {
     AddSlides(mainImgList);
   }
+  // need to add get weather info here
+  // display pages
   console.log("setting active menu pages");
   Client.setMenu(6);
+  let x=document.getElementById("recordStatus");
+  x.style.display="block";
+  if (destRecords[idx].toDoCheckx.length > 0) {
+    Client.setMenu(1);
+  }
 }
 
 function loadSaveDestList() {
@@ -70,7 +83,9 @@ function loadSaveDestList() {
   for (let a=0; a < destNumber; a++) {
     console.log("record "+a);
     console.log(destRecords[a].recStatus);
-    if (destRecords[a].recStatus === "active") {
+    let myStatus = document.getElementById("listRecordStatus").value;  
+    console.log(" list status is "+myStatus);
+    if (destRecords[a].recStatus === myStatus) {  
       let y = document.createElement("li");
       let idx = destRecords[a].recId;
       y.classList.add("travelDest");
@@ -104,30 +119,23 @@ loadSaveDestList();
 async function saveTrip() {
   document.getElementById("recordIdNumb").innerHTML = destNumber;
   let recId = destNumber;
-  let recStatus="active";
+  let recStatus="Active";
   let toDoLabelx = [];
   let toDoCheckx =[]
   let picx = [];
   let destx = document.getElementById("travelCity").innerHTML;
   let adminx = document.getElementById("travelAdmin").innerHTML;
   let countryx = document.getElementById("travelCountry").innerHTML;
+  let datex = document.getElementById("travelDate").innerHTML;
   let latx = document.getElementById("travelLat").innerHTML;
   let lonx = document.getElementById("travelLon").innerHTML;
-
-  //if (!!document.getElementsByClassName("toDoCheck")) {
-    // add all of the toDo labels here in toDox
-    //toDox = [];
- //}
- // else {
-    //toDox = [];
- // }
   if (mainImgList===[]) {
    picx = defaultImgList;
   }
   else{
    picx = mainImgList; 
   }
-  let myTripRec = {recId,recStatus,destx,adminx,countryx,latx,lonx,toDoCheckx,toDoLabelx,picx};
+  let myTripRec = {recId,recStatus,destx,adminx,countryx,datex,latx,lonx,toDoCheckx,toDoLabelx,picx};
   let postOpts = {
     method: "post",
     body: JSON.stringify(myTripRec),
@@ -159,10 +167,27 @@ async function saveToDoList(toDoRec) {
   let json = await myResponse.json();
   console.log(json);
   destRecords = json;
- 
+}
 
-
-
+async function saveStatus(sts,destRec) {
+  if (document.getElementById("listRecordStatus").display === "none") {
+    console.log("element is invisible don't change");
+    return;
+  }
+  let postRec = {sts,destRec};
+  console.log(postRec);
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(postRec),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  };
+  let myResponse = await fetch("/postSaveStatus", postOpts); 
+  let json = await myResponse.json();
+  console.log(json);
+  destRecords = json;
 }
 
 async function getDest(destindex) { 
@@ -258,7 +283,13 @@ function AddSlides(slideList) {
     // create caption text holder
     let z = document.createElement("div");
     z.classList.add("text");
-    z.innerHTML = "caption-text";
+    //z.innerHTML = "caption-text";
+    let zchild = document.createElement("a");
+    zchild.classList.add("childtext");
+    zchild.innerText = "Pixabay Image";
+    zchild.href = "https://pixabay.com";
+    z.appendChild(zchild);
+    
 
     // add to slideshow
     console.log("adding image to image container slide div");
@@ -409,7 +440,11 @@ function popPics(json) {
   for (a=0; a < pic.length; a++) {
     mainImgList.push(pic[a].webformatURL);
   }
-  AddSlides(mainImgList);
+  // keep default image list if no pics
+  // otherwise add new images
+  if (mainImgList.lenth > 0) {  
+  AddSlides(mainImgList);       
+  }
 }
 
 function getDates() {
@@ -519,4 +554,4 @@ function handleSubmit(event) {
 
 }
 
-export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide, saveTrip, getDest, getDestList, saveToDoList };
+export { handleSubmit, retrieveData, AddSlides, showSlides, currentSlide, changeSlide, saveTrip, getDest, getDestList, saveToDoList, loadSaveDestList, saveStatus };

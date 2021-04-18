@@ -113,12 +113,26 @@ app.post("/getGeo", async (req, res) => {
 
 });
 
-app.post("/postSaveToDo", function (req, res) { // Save dest record
+app.post("/postSaveToDo", function (req, res) { // Save dest toDo record 
   try{
     console.log(" i'm here");
     console.log(req.body);
     mySave[req.body.recId].toDoCheckx = req.body.myBoxData;
     mySave[req.body.recId].toDoLabelx = req.body.myLabelData;
+    res.json(mySave);
+    console.log(mySave);
+  }
+  catch {
+    console.log("@@@@@@@@@@@@@@@@@ Error @@@@@@@@@@@@@@@@@@@@@",error); 
+    res.json(" Save failed "+error); }
+  
+});
+
+app.post("/postSaveStatus", function (req, res) { // Save dest record status
+  try{
+    console.log("Request Status change to "+req.body.sts);
+    console.log(req.body);
+    mySave[req.body.destRec].recStatus = req.body.sts;
     res.json(mySave);
     console.log(mySave);
   }

@@ -9,7 +9,8 @@ window.onload = (event) => {
   document.getElementById("PlannerBtn").addEventListener("click", function() {return Client.setMenuPage(0);});
   document.getElementById("newsBtn").addEventListener("click", function() {return Client.setMenuPage(1);});
   document.getElementById("aboutBtn").addEventListener("click", function() {return Client.setMenuPage(2);});
-  document.getElementById("savesBtn").addEventListener("click", function() {return Client.setMenuPage(4);});
+  //document.getElementById("savesBtn").addEventListener("click", function() {return Client.setMenuPage(4);});
+  document.getElementById("savesBtn").addEventListener("click", function() {return Client.setMenu(5);});
   document.getElementById("submitButton1").addEventListener("click", function() {return Client.handleSubmit(event);});
   document.getElementById("newToDo").addEventListener("click", function () {return Client.newList(event);});
   document.getElementById("eraseToDo").addEventListener("click", function () {return Client.eraseToDoList();});
@@ -20,6 +21,9 @@ window.onload = (event) => {
   document.getElementById("tb1").addEventListener("click", function () {return Client.openWeather("0");});
   document.getElementById("tb2").addEventListener("click", function () {return Client.openWeather("1");});
   document.getElementById("tb3").addEventListener("click", function () {return Client.openWeather("2");});
+  document.getElementById("listRecordStatus").addEventListener("change", function () {return Client.loadSaveDestList();});
+  document.getElementById("recordStatus").addEventListener("change", function () {return Client.saveStatus(document.getElementById("recordStatus").value,document.getElementById("recordIdNumb").innerHTML);});
+  document.getElementById("main-container").style.display="grid";
 };
 
 let defaultImgList = ["./images/img1.jpg","./images/img2.jpg","./images/img3.jpg","./images/img5.jpg","./images/img6.jpg","./images/img7.jpg"];
@@ -139,6 +143,19 @@ function clearWeather(){
     }
   }
 
+  function recStatusSet(myState) {
+    console.log("made set record status = "+ myState)
+    let x=document.getElementById("recordStatus");
+    if (myState === "true") {
+      console.log("true");
+      x.style.display="block";
+    }
+    else {
+     console.log("false");
+     x.style.display="none"; 
+    }
+  }
+
   function clearInputFields() {
     let x=document.getElementById("cityField");
     x.value = "";
@@ -178,7 +195,9 @@ function clearWeather(){
     x.innerHTML=dest[3]+":"+dest[4];
     x = document.getElementById("travelLon");
     x.innerHTML=dest[5]+":"+dest[6];
-
+    x = document.getElementById("travelDatex");
+    console.log(x);
+    x.innerHTML="Travel on "+document.getElementById("dateField").value;
     setColor(y.id,true);
   }
 
@@ -189,6 +208,7 @@ function setMenu(menuIndex) {
     console.log("executing menu 0"); 
   clearDestList(); 
   isBtnOn(false);
+  recStatusSet("false");
   clearToDoList();
   clearWeather();
   defaultImageList();
@@ -200,7 +220,7 @@ function setMenu(menuIndex) {
   
   }
   else {
-    if (menuIndex===1){
+    if (menuIndex===1){  // display toDo 
       console.log("executing menu 1");
       let x=document.getElementById("toDo-container");
       x.style.display="block";
@@ -210,7 +230,7 @@ function setMenu(menuIndex) {
       x.style.display="block";
     }
     else {
-      if (menuIndex===2) {  // display destination list menus
+      if (menuIndex===2) {  // display destination list 
         console.log("executing menu 2");
         setMenuPage(3);
         setMidUpperLeft(true,3);
@@ -218,7 +238,7 @@ function setMenu(menuIndex) {
         setMidUpperRight(true);
         setMidLower(true,1);
         rotateBtn("acceptBtn");
-        //Test data @@@@@@@@@@@@@
+        //Test data remove for final @@@@@@@@@@@@@
         console.log("creating dest list");  // creating test list
         let x=document.getElementById("destList");
         for (let a=0; a < 10; a++) {
@@ -249,19 +269,22 @@ function setMenu(menuIndex) {
           if (menuIndex === 4) {
             setMidLower(true,2);
             setMenu("1");
+
             
           }
           else {
             if (menuIndex === 5) {
+              document.getElementById("recordStatus").selectedIndex = 0;
+              Client.loadSaveDestList();
               setMidUpperLeft(true,4);
+
             }
             else {
               if (menuIndex === 6){
-                setMidLower(true,2);
-                setMenu(1);
                 setMidUpperLeft(true,3);
                 setRightState(true);
                 setMidUpperRight(true);
+                recStatusSet(true);
               }
             }
           }
@@ -383,12 +406,12 @@ function toggleCheckbox(checkIndex) {
   enableButton("saveToDo",true);
   
 }
-
+// save toDo button clicked. Saves toDo list 
 function saveList() {
   enableButton("saveToDo",false);
   let myBoxData = [];
   let myLabelData = [];
-  let recId = document.getElementById("recordIdNumb").innerHTML;  // this will need to be the id of the saved record 0 for testing
+  let recId = document.getElementById("recordIdNumb").innerHTML; 
   let x = document.getElementsByClassName("toDoCheck");
   let y = document.getElementsByClassName("checkBoxLabel");
   for (let a=0; a < x.length; a++) {
@@ -465,23 +488,13 @@ function setCitySearch(event,myElem) {
 
 function acceptDest(event) { 
   setMenu(4);
+  document.getElementById("recordStatus").selectedIndex = 0;
+  recStatusSet("true");
   setMidLow("off");
   rotateBtn("newToDo");
   saveTrip();
 
 }
-
-
-//SAVE WILL be city
- //admin
- //country
- //latlon
- //hastodo true or false
- //todoarray for todo items
- //pic array for pics 
- // all wrapped up into one json object
-
-
 
  
 function setEdit(myinx) {  // turn on ToDo edit when label is clicked
@@ -608,40 +621,5 @@ function isUs(event) {
   }
 }
 
-function checkForName(inputData) {
-  console.log(inputData);
-  let urlOk = new RegExp(`((http|https)://)(www.)`);
-
-  if (inputData[1] === true) {
-    console.log("0000000000000000000000000000000000000000");
-    if (urlOk.test(inputData[0])) {
-      return true;
-    } else {
-      return false;
-    }
-  } else {
-    console.log("11111111111111111111111111111111111");
-    if (urlOk.test(inputData[0])) {
-      if (
-        confirm("You have entered what appears to be a valid URL continue ?")
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      console.log("222222222222222222222222222222222222222222222222222");
-      if (
-        confirm("You have entered what appears to be an invalid URL continue ?")
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    return false;
-  }
-}
-export { checkForName, setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
+export { setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
 export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList, saveList, rotateBtn };

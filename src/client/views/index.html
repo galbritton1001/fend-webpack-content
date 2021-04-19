@@ -46,6 +46,7 @@
                                         <input type="date"id="dateField" class = "infoData"></input><br><br><br><br>
                                     </label>
                                     <button id="submitButton1" class="button">Submit</button>
+                                    <p id="dateHolder"></p>
                                     <datalist id="countryList">
                                         <option value="Afghanistan">
                                         <option value="Albania">
@@ -359,6 +360,7 @@
                                     <br>
                                     <br>
                                     <br>
+                                    <label for="inputToDo"id="toDoLabel">Type task, press enter to add</label>
                                     <input id="inputToDo" type="text"  placeholder="Enter ToDo task" onkeypress ="return Client.checkKey(event,0)"style="display: none">
                                     <button id="delToDoItem" class="button"style="display: none">Delete Item</button> 
                                     <button id="exitEditMode" class="button"style="display: none">Exit Edit</button>

@@ -106,14 +106,28 @@ function setMidLower(myState,myPage) { // set display state for mid lower
 }
 
 function getToday(dateStyle) {
+  let myDate = new Date();
+  let x= myDate.getFullYear();
+  let y= 1+myDate.getMonth();
+  let z= myDate.getDate();
+  if (y < 10) {y="0"+y;}
+  if (z < 10) {z="0"+z;}
   if (dateStyle==="short") {
-    let myDate = new Date();
-    let x= myDate.getFullYear();
-    let y= 1+myDate.getMonth();
-    let z= myDate.getDate();
-    if (y < 10) {y="0"+y;}
-    if (z < 10) {z="0"+z;}
-  return `${x}-${y}-${z}`;
+    return `${x}-${y}-${z}`;
+  }
+  else {
+    if (dateStyle === "long") {
+      var d = Date.parse(myDate);
+      let myNextDay = new Date();
+      myNextDay.setTime(d+86400000);
+      let a= myNextDay.getFullYear();
+      let b= 1+myNextDay.getMonth();
+      let c= myNextDay.getDate();
+      if (b < 10) {b="0"+b;}
+      if (c < 10) {c="0"+c;}
+      console.log( `################### getToday is ${x}-${y}-${z}:${a}-${b}-${c} #######################`);
+      return `${x}-${y}-${z}:${a}-${b}-${c}`;
+    }
   }
 
 }
@@ -183,6 +197,7 @@ function clearWeather(){
   }
 
   function currentDest(myElem) {
+    console.log(dest0)
     let x = document.getElementById("travelCity");
     let y = document.getElementById(myElem);
     let dest = y.innerHTML.split(":");
@@ -195,9 +210,9 @@ function clearWeather(){
     x.innerHTML=dest[3]+":"+dest[4];
     x = document.getElementById("travelLon");
     x.innerHTML=dest[5]+":"+dest[6];
-    x = document.getElementById("travelDatex");
-    console.log(x);
-    x.innerHTML="Travel on "+document.getElementById("dateField").value;
+    //x = document.getElementById("travelDatex");
+   console.log(x);
+    //x.innerHTML="Travel on "+document.getElementById("dateField").value;
     setColor(y.id,true);
   }
 
@@ -232,25 +247,28 @@ function setMenu(menuIndex) {
     else {
       if (menuIndex===2) {  // display destination list 
         console.log("executing menu 2");
-        setMenuPage(3);
+        //setMenuPage(3);
         setMidUpperLeft(true,3);
         setRightState(true);
         setMidUpperRight(true);
         setMidLower(true,1);
         rotateBtn("acceptBtn");
+        openWeather(0);
         //Test data remove for final @@@@@@@@@@@@@
-        console.log("creating dest list");  // creating test list
-        let x=document.getElementById("destList");
-        for (let a=0; a < 10; a++) {
-          console.log( `@@@ ${a} @@@@`);
-          let y=document.createElement("li");
-          y.id="dest"+a;
-          y.innerHTML=`MyCity ${a}:MyState:MyCountry:lat:00000:lon:11111`;         
-          y.classList.add("travelDest");
-          y.addEventListener("click", function () {currentDest("dest"+a);});
-          console.log(y);
-          x.appendChild(y); 
-        }
+        //console.log("creating dest list");  // creating test list
+        //let x=document.getElementById("destList");
+        //for (let a=0; a < 10; a++) {
+        //  console.log( `@@@ ${a} @@@@`);
+        //  let y=document.createElement("li");
+        //  y.id="dest"+a;
+        //  y.innerHTML=`MyCity ${a}:MyState:MyCountry:lat:00000:lon:11111`;         
+        //  y.classList.add("travelDest");
+        //  y.addEventListener("click", function () {currentDest("dest"+a);});
+        //  console.log(y);
+        //  x.appendChild(y); 
+       // }
+        console.log(dateHolder);
+        document.getElementById("travelDatex").innerHTML = "Travel on "+document.getElementById("dateHolder").innerHTML;
         // Test data end @@@@@@@@@@@@@ 
         currentDest("dest0");
                  
@@ -435,6 +453,7 @@ clearToDoList();
 setMenu(4);
 setMidLower(true,0);
 rotateBtn("newToDo");
+saveList();
 }
 
 function delToDoItem(event) {  // Delete ToDo item from list
@@ -604,8 +623,10 @@ function checkKey(event,srcIndex) {
   console.log(event.target);
   if (event.keyCode === 13) { 
     if (srcIndex === 0){
-    createToDo(event);
-    enableButton("saveToDo",true);
+      if (document.getElementById("inputToDo").value.length > 0) {
+        createToDo(event);
+        enableButton("saveToDo",true);
+      }
     }
   }
 }
@@ -621,5 +642,5 @@ function isUs(event) {
   }
 }
 
-export { setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest };
+export { setMenuPage, checkKey, createToDo, setEdit, delToDoItem, isUs, setMenu, acceptDest, currentDest, enableButton, getToday };
 export { exitEdit, newList, openWeather, setMidLower, setRightState, setMidUpperRight, setMidUpperLeft, eraseToDoList, saveList, rotateBtn };

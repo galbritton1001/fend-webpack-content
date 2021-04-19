@@ -24,9 +24,10 @@ function loadSaveDest(idx){
   document.getElementById("travelCity").innerHTML = destRecords[idx].destx;
   document.getElementById("travelAdmin").innerHTML = destRecords[idx].adminx;
   document.getElementById("travelCountry").innerHTML = destRecords[idx].countryx;
-  document.getElementById("travelDate").innerHTML = destRecords[idx].datex;
+  document.getElementById("travelDatex").innerHTML = destRecords[idx].datex;
   document.getElementById("travelLat").innerHTML = destRecords[idx].latx;
   document.getElementById("travelLon").innerHTML = destRecords[idx].lonx;
+  document.getElementById("recordStatus").value = destRecords[idx].recStatus;
   mainImgList=destRecords[idx].picx;
   console.log("finished memu page starting Todo");
   console.log(destRecords[idx].toDoCheckx.length);
@@ -63,6 +64,21 @@ function loadSaveDest(idx){
     AddSlides(mainImgList);
   }
   // need to add get weather info here
+  let myLat = document.getElementById("travelLat").innerHTML.split(":");
+  let myLon = document.getElementById("travelLon").innerHTML.split(":");
+  let one ="";
+  let two = `${myLat[1]}:${myLon[1]}`;
+  let three = Client.getToday("long");
+  let meme = { one, two, three };
+  let postOpts = {
+    method: "post",
+    body: JSON.stringify(meme),
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  };
+  GetWeatherData(postOpts);
   // display pages
   console.log("setting active menu pages");
   Client.setMenu(6);
@@ -126,7 +142,7 @@ async function saveTrip() {
   let destx = document.getElementById("travelCity").innerHTML;
   let adminx = document.getElementById("travelAdmin").innerHTML;
   let countryx = document.getElementById("travelCountry").innerHTML;
-  let datex = document.getElementById("travelDate").innerHTML;
+  let datex = document.getElementById("travelDatex").innerHTML;
   let latx = document.getElementById("travelLat").innerHTML;
   let lonx = document.getElementById("travelLon").innerHTML;
   if (mainImgList===[]) {
@@ -154,6 +170,7 @@ async function saveTrip() {
   catch { console.log("Error saveing travel destination ",error);}  
 }
 
+// post toDo list to server
 async function saveToDoList(toDoRec) {
   let postOpts = {
     method: "post",
@@ -169,6 +186,7 @@ async function saveToDoList(toDoRec) {
   destRecords = json;
 }
 
+// post status to server
 async function saveStatus(sts,destRec) {
   if (document.getElementById("listRecordStatus").display === "none") {
     console.log("element is invisible don't change");
@@ -246,7 +264,10 @@ function showSlides(a) {
 // add slides to slide container and dots to dot container
 function AddSlides(slideList) {
 
-  console.log("Made it to addSlides")
+  console.log("Made it to addSlides");
+  if (slideList.length < 1) {
+    slideList = defaultImgList;
+  }
   const mySlideElem = document.getElementById("slideList");
   const myDotElem = document.getElementById("dot-container");
   while (mySlideElem.firstChild) {
@@ -340,12 +361,13 @@ function popUlDest(json) {
     y.id="dest"+a;
     y.classList.add("travelDest");
     y.innerHTML=str;
+    y.addEventListener("click", function () {return Client.currentDest("dest"+a);});
     console.log(y);
     x.appendChild(y);
     setMidLower(true,1);
   }
 }
-
+// load current weather tab
 function currentWeather(json) {
   let x=document.getElementById("currForcast");
   let y=document.createElement("p");
@@ -376,11 +398,20 @@ function currentWeather(json) {
 
 }
 
+// load extende weather tab
 function extendedWeather(json) {
   let x=document.getElementById("extForcast");
   let a=0;
   for (a=0; a<16; a++) {
     let y=document.createElement("p");
+    y.innerHTML = `*********  Day ${a+1} *********`;
+    x.appendChild(y);
+    y=document.createElement("p");
+    y.innerHTML=`Valid Date ${json.data[a].valid_date}`;
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("p");
     y.innerHTML=`High Temp: ${json.data[a].high_temp} Degree`;
     x.appendChild(y);
     y=document.createElement("br");
@@ -403,9 +434,14 @@ function extendedWeather(json) {
     y=document.createElement("p");
     y.innerHTML=`Precipitation ${json.data[a].precip}`;
     x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
+    y=document.createElement("br");
+    x.appendChild(y);
   }
 }
 
+// load historical weather tab
 function historicalWeather(json) {
   let x=document.getElementById("histForcast");
   let a=0;
@@ -442,38 +478,59 @@ function popPics(json) {
   }
   // keep default image list if no pics
   // otherwise add new images
-  if (mainImgList.lenth > 0) {  
+  //if (mainImgList.lenth > 0) {  
   AddSlides(mainImgList);       
-  }
+  //}
 }
 
 function getDates() {
   let myDate = new Date(document.getElementById("dateField").value);
   console.log(myDate);
   var d = Date.parse(myDate);
-  let myNextDay = new Date(document.getElementById("dateField").value);
+  //let myNextDay = new Date(document.getElementById("dateField").value);
   let h=myDate.getTimezoneOffset()*60000;  //compensate for UTC timezone
   console.log(d);
   console.log(h);
   myDate.setTime(d+h);  // add current millisec and offset millisec to correct date
-  myNextDay.setTime(d+h+86400000); // add 1 day
+  //myNextDay.setTime(d+h+86400000); // add 1 day
   console.log(myDate);
   console.log(myNextDay);
-  let a= myNextDay.getFullYear();
-  let b= 1+myNextDay.getMonth();
-  let c= myNextDay.getDate();
+  //let a= myNextDay.getFullYear();
+  //let b= 1+myNextDay.getMonth();
+  //let c= myNextDay.getDate();
   let x= myDate.getFullYear();
   let y= 1+myDate.getMonth();
   let z= myDate.getDate();
   if (y < 10) {y="0"+y;}
   if (z < 10) {z="0"+z;}
-  if (b < 10) {b="0"+b;}
-  if (c < 10) {c="0"+c;}
-  return `${x}-${y}-${z}:${a}-${b}-${c}`;
+  //if (b < 10) {b="0"+b;}
+  //if (c < 10) {c="0"+c;}
+  document.getElementById("dateHolder").innerHTML = `${x}-${y}-${z}`;
+  console.log(dateHolder);
+  return Client.getToday("long");
 }
 
+async function GetWeatherData(postOpts) {
+  let myResponse = await fetch("/getWeatherCurrent", postOpts); // get current weather based on lat lon from Geoname
+  let json = await myResponse.json();
+  console.log(json);
+  console.log(JSON.stringify(json));
+  currentWeather(json);
+  myResponse = await fetch("/getWeather3day", postOpts); // get 3day weather based on lat lon from Geoname
+  json = await myResponse.json();
+  console.log(json);
+  console.log(JSON.stringify(json));
+  extendedWeather(json);
+  myResponse = await fetch("/getWeatherHist", postOpts); // get historical weather based on lat lon from Geoname
+  json = await myResponse.json();
+  console.log(json);
+  console.log(JSON.stringify(json));
+  historicalWeather(json);
+}
 // call API for city weather and pictures
 async function retrieveData(urlTxt) {
+  Client.enableButton("submitButton1",false);
+  document.getElementById("dateHolder").innerHTML = document.getElementById("dateField").value;
   let one =document.getElementById("cityField").value;
   console.log(document.getElementById("cityField").value);
   let two = "";
@@ -508,41 +565,27 @@ async function retrieveData(urlTxt) {
       },
     };
     console.log(postOpts);
-    myResponse = await fetch("/getWeatherCurrent", postOpts); // get current weather based on lat lon from Geoname
-    json = await myResponse.json();
-    console.log(json);
-    console.log(JSON.stringify(json));
-    currentWeather(json);
-    myResponse = await fetch("/getWeather3day", postOpts); // get 3day weather based on lat lon from Geoname
-    json = await myResponse.json();
-    console.log(json);
-    console.log(JSON.stringify(json));
-    extendedWeather(json);
-    myResponse = await fetch("/getWeatherHist", postOpts); // get historical weather based on lat lon from Geoname
-    json = await myResponse.json();
-    console.log(json);
-    console.log(JSON.stringify(json));
-    historicalWeather(json);
+    GetWeatherData(postOpts);
     myResponse = await fetch("/getPics", postOpts);  // get city pics from Pixabay
     json = await myResponse.json();
     console.log(json);
     console.log(JSON.stringify(json));
     popPics(json); // send to picture list builder
-    //Client.setMidUpperLeft(true,3);
-    //Client.setRightState(true);
-    //Client.setMidUpperRight(true);
+    Client.enableButton("submitButton1",true);
     Client.setMenu(2);// display ul destination list
     alert(`API call succsessful`);
   } catch (error) {
     console.log("error", error);
     alert(`API call fail ${error}`);
+    Client.enableButton("submitButton1",true);
     //############# remove this section is for testing only###############
    // Client.setMenuPage(3);
     //Client.setMidUpperLeft(true,3);
     //Client.setRightState(true);
     //Client.setMidUpperRight(true);
     //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Calling Menu 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    Client.setMenu(2);
+    
+    Client.setMenu(7);
 
     ///############end test section ############
   }
@@ -550,7 +593,8 @@ async function retrieveData(urlTxt) {
 
 function handleSubmit(event) {
 
-    retrieveData('Paris');
+    //retrieveData('Paris');
+    retrieveData('');
 
 }
 
